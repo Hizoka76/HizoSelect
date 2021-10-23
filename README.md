@@ -87,6 +87,42 @@ Résultat :
 > 
 > Edith Piaf, numéro 5, était une Chanteuse dont le code est PiafEdith.
  
+ 
+### Récupération des valeurs :
+Pour récupérer une valeur unique :
+```
+Valeur=$(hizoselect --max 1 ...)
+echo "Valeur => $Valeur"
+```
+
+Pour récupérer une liste de réponse :
+```
+mapfile -t Valeurs < <(hizoselect ...)
+echo "Valeurs => ${Valeurs[*]}"
+```
+
+Pour récupérer une liste de réponse avec modification de l'IFS à \0 :
+```
+mapfile -td Valeurs < <(hizoselect --delimiter "\0" ...)
+echo "Valeurs => ${Valeurs[*]}"
+```
+
+Pour récupérer un tableau indexé :
+```
+mapfile -t Choice < <(hizoselect -o "%t@%c" "%t=Clara Morgan %c=Actress" ...)
+
+if [[ ${Choice[*]} ]]
+then
+    declare -Ag Women
+    for Woman in "${Choice[@]}"
+    do
+        Women["${Woman%%@*}"]="${Woman##*@}"
+    done
+    declare -p Women
+fi
+```
+
+
 
 ### Aide :
 La commande à un argument help : **hizoselect --help**.
@@ -185,6 +221,41 @@ Result :
 > 
 > Edith Piaf, number 5, was Singer with code PiafEdith.
  
+ 
+### Retrieving values:
+To retrieve a single value:
+```
+Value=$(hizoselect --max 1 ...)
+echo "Value => $Value"
+```
+
+To retrieve a list of responses:
+```
+mapfile -t Values < <(hizoselect ...)
+echo "Values => ${Values[*]}"
+```
+
+To retrieve a response list with IFS modification to \0:
+```
+mapfile -td Values < <(hizoselect --delimiter "\0" ...)
+echo "Values => ${Values[*]}"
+```
+
+To retrieve an indexed array:
+```
+mapfile -t Choice < <(hizoselect -o "%t@%c" "%t=Clara Morgan %c=Actress" ...)
+
+if [[ ${Choice[*]} ]]
+then
+    declare -Ag Women
+    for Woman in "${Choice[@]}"
+    do
+        Women["${Woman%%@*}"]="${Woman##*@}"
+    done
+    declare -p Women
+fi
+```
+
 
 ### Help:
 The command has a help argument: **hizoselect --help**.
