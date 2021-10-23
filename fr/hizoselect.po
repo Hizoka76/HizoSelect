@@ -215,7 +215,7 @@ msgid ""
 "Effects of actions, commentaries, errors, numbers, prompt text, secret "
 "texts, texts and title."
 msgstr ""
-"Effets des actions, commentaires, des erreurs, des nombres, du texte du "
+"Effets visuels des actions, commentaires, des erreurs, des nombres, du texte du "
 "prompt, des textes secrets, des textes et du titre."
 
 #: functions/translation.sh:81
@@ -240,7 +240,7 @@ msgstr "Démonstration de commandes."
 
 #: functions/translation.sh:85
 msgid "Displays this help."
-msgstr "Affiche cette aide"
+msgstr "Affiche cette aide."
 
 #: functions/translation.sh:86
 msgid "Mandatory answers."
@@ -260,7 +260,7 @@ msgstr "Nombre minimal de réponse attendue."
 
 #: functions/translation.sh:90
 msgid "Allows to return the same answer several times."
-msgstr "Permets de renvoyer plusieurs fois la même réponse."
+msgstr "Renvoi plusieurs fois la même réponse possible."
 
 #: functions/translation.sh:91
 msgid "Enables the use of symbols in the answers."
@@ -340,7 +340,7 @@ msgstr "Nom de la commande affichée dans les messages d'erreurs."
 
 #: functions/translation.sh:110
 msgid "Clear the terminal before display the texts."
-msgstr "Nettoyer le terminal avant d'afficher les textes."
+msgstr "Nettoie le terminal avant d'afficher les textes."
 
 #: functions/translation.sh:111
 msgid "file"
