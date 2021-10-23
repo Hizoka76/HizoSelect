@@ -1,0 +1,51 @@
+# hizoselect(1) completion                                    -*- shell-script -*-
+
+# https://debian-administration.org/article/316/An_introduction_to_bash_completion_part_1
+# https://debian-administration.org/article/317/An_introduction_to_bash_completion_part_2
+
+# Fonction à utiliser
+_hizoselect()
+{
+    # Création locale des variables
+    local cur prev opts
+
+    # Remplissage des variables
+    cur="${COMP_WORDS[COMP_CWORD]}" # Mot actuel
+    prev="${COMP_WORDS[COMP_CWORD-1]}" # mot précédent
+
+    case "${prev}" in
+        # Propose les valeurs possibles des options
+        "-E"|"--effects")
+            COMPREPLY=( $(compgen -W "%[a-Z] %(ActKey|ActName|Error|Prompt|Title) bold dim smul smso" -- ${cur}) )
+            return 0 ;;
+
+        "-o"|"--output"|"-i"|"--input")
+            COMPREPLY=( $(compgen -W "%n %[a-Z]" -- ${cur}) )
+            return 0 ;;
+
+        "-b"|"--bar")
+            COMPREPLY=( $(compgen -W "h c v d l e" -- ${cur}) )
+            return 0 ;;
+
+        "-A"|"--actions")
+            COMPREPLY=( $(compgen -W "c d v" -- ${cur}) )
+            return 0 ;;
+
+        "-p"|"--proposals")
+            COMPREPLY=( $(compgen -W "0 1 2 3" -- ${cur}) )
+            return 0 ;;
+
+        "-S"|"--symbols")
+            COMPREPLY=( $(compgen -W "a r R" -- ${cur}) )
+            return 0 ;;
+
+        # Propose les options disponibles
+        *)
+            # Variable contenant les textes à renvoyer
+            COMPREPLY=( $(compgen -W "-- -? -A -b -c -C -d -D -e -E -f -F -h -i -I -m -M -n -o -p -P -s -S -t -T -u -v --actions --bar --clear --config --default --delimiter --effects --examples --force --help --input --input-delimiter --id --info --min --max --multi --name --output --prompt --proposals --several --sort --symbols --title --text --uniq-item --version" -- ${cur}) )
+            return 0 ;;
+    esac
+}
+
+# Lie la fonction à la commande
+complete -F _hizoselect hizoselect

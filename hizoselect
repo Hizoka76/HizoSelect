@@ -1,0 +1,1141 @@
+#!/bin/bash
+
+
+# -a et --answers est toujours actifs pour la retro compatibilité...
+
+
+################################## FR ########################################
+##                                                                          ##
+##     Créateur de listes de proposition complètement personnalisables      ##
+##                 avec un large choix de réponse en bash.                  ##
+##                                                                          ##
+## Depuis 2017 par Terence Belléguic (hizo@free.fr) sous licence GNU GPL v3 ##
+##                                                                          ##
+################################## EN ########################################
+##                                                                          ##
+##                 Fully customizable proposal lists creator                ##
+##                   with a wide choice of answers in bash                  ##
+##                                                                          ##
+## Since 2017 by Terence Belléguic (hizo@free.fr) under licence GNU GPL v3  ##
+##                                                                          ##
+##############################################################################
+
+
+# Variables globales importantes :
+#     Proposals : Liste contenant toutes les propositions brutes
+#         Ex : ("%t=texte %c=commentaire" ...)
+#         Proposals[0] ne sera jamais utilisé et même supprimé pour ne pas foutre le bordel dans la commande ci dessous
+#         ${!Proposals[@]} correspond donc au nombre de proposition et à leur numéro
+#
+#     Answers : Liste des réponses avant validation
+#         La liste est rempli via l'option default puis via les read des touches
+#         Ex : 1 2-3 ? 5
+#
+#     AnswerList : Liste des réponses actuelles, les ranges sont remplacés par leurs valeurs
+
+
+# faire un exemple video et ajouter le lien
+# LANG=EN hizoselect \
+#     --clear \
+#     --title "World cuisine" \
+#     --output "Answer : %n - %s : %t @ %c" \
+#     --text "Arrange the following dishes according to your preferences:" \
+#     "%t=Sushis %s=Japanes %c=Fish" \
+#     "%t=Cassoulet %s=French %c=Meat" \
+#     "%t=Burger %s=US %c=Meat" \
+#     "%t=Pizza %s=Italian %c=Meat" \
+#     "%t=Tapas %s=Spanish %c=Fish and Meat" \
+#     "%t=Sauerkraut %s=German %c=Meat" \
+#     "%t=Chili con carne %s=Mexican %c=Meat"
+
+### Bloque l’expansion de ? et de *
+set -f
+
+### Nécessaire pour les nettoyages de variable
+shopt -s extglob
+
+
+########################
+## Variables globales ##
+########################
+### version et licence
+Version="3.2.2 - 04/09/2021"
+Licence="GNU GPL v3"
+
+
+### Emplacement du dossier du fichier
+Source="${0}"
+
+# Si le fichier est un lien
+while [[ -h "${Source}" ]]
+do
+  Folder="${Source%\/*}"
+
+  Source="$(readlink "${Source}")"
+
+  # Si c'est un lien relatif, on en fait un lien complet
+  [[ ${Source} != /* ]] && Source="${Folder}/${Source}"
+done
+
+Folder="$( cd -P "$( dirname "${Source}" )" >/dev/null 2>&1 && pwd )"
+
+
+
+### Variables par défaut, à charger malgré le fichier default.cfg afin de ne pas manquer une variable
+All=1
+BarLetters="hcvdle"
+Bar="hcvdle"
+Columns=0
+ColumnExists=0
+[[ $(which column) ]] && ColumnExists=1
+Debug=1
+Delimiter='\n'
+Effect=1
+Min=0
+Max=0
+InputText="%n) %t"
+OutputText="%t"
+Proposals[0]="" # Nécessaire de créer le 0 pour que les réponses commencent à 1
+ProposalsOrigin=2
+Random=1
+Range=1
+Uniq=1
+UniqueItem=
+SortType=
+ClearTerminal=0
+LettresOK="a-mo-zA-Z" # Bloque seulement %n
+InputDelimiter=
+
+
+### Variable conservant en mémoire les couleurs qui peuvent être désactivées ou activées
+declare -Ag DefineEffects
+DefineEffects["ActKey"]="185/bold" # Jaune
+DefineEffects["ActName"]="27" # Bleu
+DefineEffects["Error"]="197" # Rouge
+DefineEffects["n"]="97/bold" # Mauve
+DefineEffects["Prompt"]="31" # Bleu vert
+DefineEffects["t"]="27" # Bleu
+DefineEffects["Title"]="167" # Bleu vert
+DefineEffects["OK"]="35" # Vert pomme
+DefineEffects["Maybe"]="131" # Orange
+DefineEffects["Last"]="97" # Mauve
+EffectsKey="ActKey|ActName|Error|Prompt|Title|OK|Maybe|Last"
+
+
+# Si le fichier default.cfg n'existe pas, on le crée
+if [[ ! -f "${HOME}/.config/HizoSelect/default.cfg" ]]
+then
+    # Chargement du fichier config_default.sh qui crée le fichier par défaut
+    source "${Folder}/config_default.sh"
+fi
+
+
+
+#########################################
+## Chargement du fichier des fonctions ##
+#########################################
+### Chargement du fichier functions.sh qui charge toutes les fonctions
+source "${Folder}/functions.sh"
+
+
+
+##############################
+## Traitement des arguments ##
+##############################
+# Chargement du script arguments.sh qui gère les arguments
+source "${Folder}/arguments.sh"
+
+
+
+######################
+## Gestion de stdin ##
+######################
+# Chargement du script stdin.sh qui gère les propositions depuis stdin
+source "${Folder}/stdin.sh"
+
+
+
+####################################
+## Dédoublonnage des propositions ##
+####################################
+if [[ ${UniqueItem} ]]
+then
+    # Chargement du script uniq.sh qui nettoie les propositions doublons
+    source "${Folder}/uniq.sh"
+fi
+
+
+################################
+## Rangement des propositions ##
+################################
+if [[ ${SortType} ]]
+then
+    # Chargement du script sort.sh qui range les propositions
+    source "${Folder}/sort.sh"
+fi
+
+
+############
+## Divers ##
+############
+# Suppression de la valeur 0 maintenant que la liste est remplie
+unset Proposals[0]
+
+
+# Chargement des effets visuels
+EffectsSetUp ${Effect}
+
+# Si max n'est pas défini, qu'on ne peut dupliquer les réponses et que --min est < au nombre de proposition
+(( ! ${Max} && ${Uniq} && ${Min} < ${#Proposals[@]} )) && Max="${#Proposals[@]}"
+
+
+
+################################################################
+## (dé)Blocage automatique de certaines options incompatibles ##
+################################################################
+# Bloque le mode --all avec --max si la limite est inférieur au nombre de proposition
+(( ${All} && ${Max} && ${Max} > ${#Proposals[@]} )) && All=0
+
+# Bloque le mode --all si mode force et uniq
+(( ${Uniq} && ${All} && ${#ForceAnswersTemp} )) && All=0
+
+# Bloque le mode --range si le nombre de réponse possible est de 1
+(( ${Range} && ${Max} == 1 )) && Range=0
+
+# Déblocage du mode several si --min est > au nombre de proposition
+(( ${Min} && ${Min} > ${#Proposals[@]} )) && Uniq=0
+
+
+
+###################
+## Vérifications ##
+###################
+# Vérifie qu'il y a bien des propositions
+[[ ${#Proposals[@]} -lt 1 ]] && ExitErreur "error_insufficient"
+
+# Vérifie que min ne soit pas plus grande que max
+[[ ${Min} -gt 0 && ${Max} -gt 0 && ${Min} -gt ${Max} ]] && ExitErreur "error_min_sup_max"
+
+# Vérifie que input contient bien un %n
+[[ ${InputText} != *"%n"* ]] && ExitErreur "error_input"
+
+
+
+####################################
+## Réponses par défaut et forcées ##
+####################################
+[[ ${AnswersTemp} || ${Proposals[*]} == *"%default"* ]] && Answers=($(AnswerRead "${AnswersTemp}" "default"))
+
+
+### S'il y a des valeurs forcées, prioritaire sur les valeurs par défaut
+if [[ ${ForceAnswersTemp} || ${Proposals[*]} == *"%force"* ]]
+then
+    ForceAnswers=($(AnswerRead "${ForceAnswersTemp}" "force"))
+
+    # Sauvegarde des valeurs de --answers pour ne pas les compter dans les limites
+    [[ ${Answers[*]} ]] && { DefaultAnswers=("${Answers[@]}"); unset Answers; }
+
+    CAV_Answers=("${ForceAnswers[@]}")
+    CheckArgValue "force"
+
+    # Reprise des valeurs de --answers
+    if [[ ${DefaultAnswers[*]} ]]
+    then
+        Answers=("${DefaultAnswers[@]}")
+        unset DefaultAnswers
+    fi
+
+    [[ ${ForceAnswers[*]} ]] && PromptTextForce="${ForceAnswers[*]} "
+fi
+
+
+### S'il y a des valeurs par défaut
+if [[ ${Answers[*]} ]]
+then
+    CAV_Answers=("${Answers[@]}")
+    CheckArgValue "answers"
+fi
+
+
+
+#########################
+## Actions de la barre ##
+#########################
+### Variables contenant les lettres raccourcis pour éviter de les charger à chaque tour de read
+HelpLetter=$(LangText info_help_letter)
+EffectLetter=$(LangText info_effect_letter)
+ViewLetter=$(LangText info_view_letter)
+DebugLetter=$(LangText info_debug_letter)
+LangLetter=$(LangText info_lang_letter)
+ExitLetter=$(LangText info_exit_letter)
+OriginalBar="${Bar}"
+
+### Modification des lettres des actions en fonction de la langue pour la gestion de la barre
+if [[ ${Bar} ]]
+then
+    for ((x=0; x<${#Bar}; x++))
+    do
+        # Lettre équivalente US => FR/?
+        case "${Bar:${x}:1}" in
+            "h") Letter="${HelpLetter}" ;;
+            "c") Letter="${EffectLetter}" ;;
+            "v") Letter="${ViewLetter}" ;;
+            "d") Letter="${DebugLetter}" ;;
+            "l") Letter="${LangLetter}" ;;
+            "e") Letter="${ExitLetter}" ;;
+            *) continue ;;
+        esac
+
+        # Changement de la lettre
+        Bar="${Bar::${x}}${Letter}${Bar:$((x+1))}"
+    done
+fi
+
+
+
+##########################
+## Affichage des textes ##
+##########################
+### Nettoyage de l'écran
+(( ${ClearTerminal} )) && printf '\33[H\33[2J' >&2
+
+
+### Affichage du titre et des propositions
+DisplayTexts
+
+
+
+##########################
+## Attente des réponses ##
+##########################
+# Saut de ligne esthétique
+echo >&2
+
+### Variables
+# Pour le nettoyage complet de la ligne
+Clear="\033[K"
+
+
+# Affichage du texte d'attente
+LastText 2
+
+
+# Boucle attendant qu'on entre une valeur au clavier
+# le -u 2 est essentiel pour les données en provenance de pipe ne posent pas problème
+while IFS='' read -r -u 2 -sn 1 Touche
+do
+    unset ValueTemp
+
+    # Traitement de la touche
+    case "${Touche,,}" in
+        # Ajout des chiffres
+        [0-9])
+            # Vérification qu'il reste de la place
+            LimitCheck || continue
+
+            # Si la variable temporaire est vide ou contient un nombre (qui peut progresser)
+            if [[ ${AnswerTemp:-0} == +([0-9]) ]]
+            then
+                # Indique le nombre à utiliser
+                Number="${Touche}"
+                [[ ${AnswerTemp} ]] && Number="${AnswerTemp}${Touche}"
+
+                # Si le chiffre peut créer un nombre
+                AnswerCheck "${Number}"
+
+                case ${?} in
+                    # Code 0 : Le nombre peut avoir un nouveau chiffre ajouté et est lui-même disponible
+                    # Code 1 : Le nombre peut avoir un nouveau chiffre ajouté mais n'est lui-même plus disponible
+                    # On valide la réponse temporaire
+                    0|1) AnswerTemp+="${Touche}" ;;
+
+                    # Code 2 : Le nombre ne peut avoir un nouveau chiffre ajouté (car déjà tous utilisés) mais est lui-même disponible
+                    2)
+                        # Ajout de la réponse à la liste et réinitialisation de la réponse temporaire
+                        Answers+=("${Number}")
+                        unset AnswerTemp
+
+                        # Mise à jour de la variable AnswerList
+                        AnswerNumbers ;;
+
+                    # Code 3 : Le nombre ne peut avoir un nouveau chiffre ajouté (car déjà tous utilisés) et n'est lui-même plus disponible
+                    # Code 4 : Le nombre n'existe pas
+                    # Code 5 : Le nombre commence par un 0
+                    # Les messages d'erreurs ont été indiqués par la fonction AnswerCheck
+                    *) continue ;;
+                esac
+
+            # Si la variable temporaire contient un range, on a donc ici [0-9]-[0-9](touche [0-9]) ou [0-9]-(touche [0-9])
+            elif [[ ${AnswerTemp} == *-* ]]
+            then
+                MinTemp="${AnswerTemp%-*}"
+                MaxTemp="${AnswerTemp#*-}${Touche}"
+
+                # Teste le nombre max
+                AnswerCheck "${MaxTemp}"
+                State="${?}"
+
+                # Dans le cas où le nombre est dispo mains inférieur à min, on passe de 0 à 1
+                (( ! ${State} && ${MinTemp} >= ${MaxTemp} )) && State=1
+
+                case ${State} in
+                    # Code 0 : Le nombre peut avoir un nouveau chiffre ajouté et est lui-même disponible
+                    0)
+                        # Si le mode unique est actif
+                        if (( ${Uniq} ))
+                        then
+                            unset IsPossible
+
+                            # Vérifie que le contenu du range ne fait pas doublon
+                            for ((x=${MinTemp}; x<=${MaxTemp}; x++))
+                            do
+                                if InArray "${x}" "${AnswerList[*]}"
+                                then
+                                    ErrorMessage 0 "error_used@${x}" 1
+                                    continue 2
+                                fi
+                            done
+
+                            # Teste si les nombres commençants par MaxTemp entrent dans les limites
+                            for Item in "${!Proposals[@]}"
+                            do
+                                # Recherche un nombre commençant par MaxTemp et vérifie qu'il est dispo
+                                if [[ ${Item} == ${MaxTemp}+([0-9]) ]] && ! InArray "${Item}" "${AnswerList[*]}"
+                                then
+                                    # Calcul le nombre de réponse avec ces nombres
+                                    RangeLimit=$(( ${#AnswerList[@]} + Item - MinTemp + 1 ))
+
+                                    # Si on est dans la limite, il faut autoriser le range
+                                    if (( ${Max} && ${RangeLimit} < ${Max} ))
+                                    then
+                                        IsPossible=1
+                                        break
+                                    fi
+                                fi
+                            done
+
+                            # Si on a trouvé un range valable
+                            if [[ ${IsPossible} ]]
+                            then
+                                AnswerTemp="${MinTemp}-${MaxTemp}"
+
+                            # Si aucun nombre n'est dispo, ça veut dire que seul le nombre en lui même est dispo, on le valide
+                            else
+                                # Ajout de la réponse à la liste et réinitialisation de la réponse temporaire
+                                Answers+=("${MinTemp}-${MaxTemp}")
+                                unset AnswerTemp
+
+                                # Mise à jour de la variable AnswerList
+                                AnswerNumbers
+                            fi
+
+                        # Si le mode unique est inactif
+                        else
+                            AnswerTemp="${MinTemp}-${MaxTemp}"
+                        fi ;;
+
+
+                    # Code 1 : Le nombre peut avoir un nouveau chiffre ajouté mais n'est lui-même plus disponible
+                    1)
+                        # Si le mode unique est actif
+                        if (( ${Uniq} ))
+                        then
+                            unset IsPossible
+
+                            # Teste si les nombres commençants par MaxTemp entrent dans les limites
+                            for Item in "${!Proposals[@]}"
+                            do
+                                # Recherche un nombre commençant par MaxTemp et vérifie qu'il est dispo
+                                if [[ ${Item} == ${MaxTemp}+([0-9]) ]] && ! InArray "${Item}" "${AnswerList[*]}"
+                                then
+                                    # Calcul le nombre de réponse avec ces nombres
+                                    RangeLimit=$(( ${#AnswerList[@]} + Item - MinTemp + 1 ))
+
+                                    # Si on est dans la limite, il faut autoriser le range
+                                    if (( ${Max} && ${RangeLimit} < ${Max} ))
+                                    then
+                                        # Vérifie que le contenu du range ne fait pas doublon
+                                        for ((x=${MinTemp}; x<=${Item}; x++))
+                                        do
+                                            if InArray "${x}" "${AnswerList[*]}"
+                                            then
+                                                ErrorMessage 0 "error_used@${x}" 1
+                                                continue 2
+                                            fi
+                                        done
+
+                                        IsPossible=1
+                                        break
+
+                                    # Si on est hors limite
+                                    else
+                                        ErrorMessage 0 "error_range_limit" 1
+                                    fi
+                                fi
+                            done
+
+                            # Si on a pas trouvé un range valable
+                            [[ -z ${IsPossible} ]] && continue
+
+                            AnswerTemp="${MinTemp}-${MaxTemp}"
+
+                        # Si le mode unique est inactif
+                        else
+                            AnswerTemp="${MinTemp}-${MaxTemp}"
+                        fi ;;
+
+
+                    # Code 2 : Le nombre ne peut avoir un nouveau chiffre ajouté (car déjà tous utilisés) mais est lui-même disponible
+                    2)
+                        # Vérifie la validité du range
+                        RangeCheck "${MinTemp}-${MaxTemp}" || continue
+
+                        # Si le mode unique est actif
+                        if (( ${Uniq} ))
+                        then
+                            RangeLimit=$((${#AnswerList[@]} + MaxTemp - MinTemp + 1 ))
+
+                            # Vérifie que la limite n'est pas atteinte
+                            if (( ${Max} && ${RangeLimit} < ${Max} ))
+                            then
+                                # Ajout de la réponse à la liste et réinitialisation de la réponse temporaire
+                                Answers+=("${MinTemp}-${MaxTemp}")
+                                unset AnswerTemp
+
+                                # Mise à jour de la variable AnswerList
+                                AnswerNumbers
+
+                            else
+                                # Rend la valeur initiale à la variable temp
+                                ErrorMessage 0 "error_range_limit" 1
+                                continue
+                            fi
+
+                        # Si le mode unique est inactif
+                        else
+                            # Ajout de la réponse à la liste et réinitialisation de la réponse temporaire
+                            Answers+=("${MinTemp}-${MaxTemp}")
+                            unset AnswerTemp
+
+                            # Mise à jour de la variable AnswerList
+                            AnswerNumbers
+                        fi ;;
+
+                    # Code 3 : Le nombre ne peut avoir un nouveau chiffre ajouté (car déjà tous utilisés) et n'est lui-même plus disponible
+                    # Code 4 : Le nombre n'existe pas
+                    # Code 5 : Le nombre commence par un 0
+                    # Les messages d'erreurs ont été indiqués par la fonction AnswerCheck
+                    *) continue ;;
+                esac
+
+            # Autre cas normalement impossible
+            else
+                ErrorMessage 0 "error_wtf" 1
+                continue
+            fi
+
+            # Affichage du nouveau texte
+            LastText 1
+        ;;
+
+        # En cas de changement du mode d'affichage ou de debug ou de langue
+        "${DebugLetter}"|"${EffectLetter}"|"${ViewLetter}"|"${LangLetter}")
+            # Si l'action n'est pas active'
+            if [[ ${Bar} != *"${Touche,,}"* ]]
+            then
+                ErrorMessage 0 "error_key@${Touche}" 1
+                continue
+            fi
+
+            # Nettoyage du terminal
+            printf '\33[H\33[2J' >&2
+
+            # Inversion de la valeur
+            if [[ ${Touche,,} == "${ViewLetter}" && ${ColumnExists} -gt 0 ]]
+            then
+                # Inverse le mode d'affichage en colonnes ou en ligne
+                Columns=$(((! Columns)))
+
+            elif [[ ${Touche,,} == "${DebugLetter}" ]]
+            then
+                # (dés)Active les messages d'erreur
+                Debug=$(((! Debug)))
+
+            elif [[ ${Touche,,} == "${EffectLetter}" ]]
+            then
+                # (dés)Active les effets de police
+                Effect=$(((! Effect)))
+
+                EffectsSetUp ${Effect}
+
+            elif [[ ${Touche,,} == "${LangLetter}" ]]
+            then
+                # Changement de la langue
+                if [[ ${LANGUAGE:0:2} =~ "en" ]]; then export LANGUAGE="fr"
+                else export LANGUAGE="en"; fi
+
+                # Mise à jour des lettres en fonction de la langue
+                DebugLetter=$(LangText info_debug_letter)
+                EffectLetter=$(LangText info_effect_letter)
+                ViewLetter=$(LangText info_view_letter)
+                LangLetter=$(LangText info_lang_letter)
+                ExitLetter=$(LangText info_exit_letter)
+                HelpLetter=$(LangText info_help_letter)
+
+                # Modification des lettres des actions en fonction de la langue pour la gestion de la barre
+                for ((x=0; x<${#OriginalBar}; x++))
+                do
+                    # Lettre équivalente US => FR/?
+                    case "${OriginalBar:${x}:1}" in
+                        "h") Letter="${HelpLetter}" ;;
+                        "c") Letter="${EffectLetter}" ;;
+                        "v") Letter="${ViewLetter}" ;;
+                        "d") Letter="${DebugLetter}" ;;
+                        "l") Letter="${LangLetter}" ;;
+                        "e") Letter="${ExitLetter}" ;;
+                        *) continue ;;
+                    esac
+
+                    # Changement de la lettre
+                    Bar="${Bar::${x}}${Letter}${OriginalBar:$((x+1))}"
+                done
+            fi
+
+            # Affichage des textes
+            DisplayTexts
+
+            # Affichage du nouveau texte
+            echo >&2
+            LastText 1
+        ;;
+
+        "${HelpLetter}")
+            # Si l'action n'est pas active
+            if [[ ${Bar} != *"${Touche,,}"* ]]
+            then
+                ErrorMessage 0 "error_key@${Touche}" 1
+                continue
+            fi
+
+            # Nettoyage du terminal
+            printf '\33[H\33[2J' >&2
+
+            # Affichage de l'aide
+            echo -e "${Effects["Error"]}$(LangText "help1")${Unset}" >&2
+
+            (( ${Min} || ${Max} )) && echo -e "\n$(LangText "help2")" >&2
+
+            (( ${Min} )) && printf " - %b$(LangText "title_min" "${Min}")%b\n" "${Effects["c"]}" "${Min}" "${Unset}" >&2
+
+            (( ${Max} )) && printf " - %b$(LangText "title_max" "${Max}")%b\n" "${Effects["c"]}" "${Max}" "${Unset}" >&2
+
+            echo -e "\n$(LangText "help3")" >&2
+
+            UniqTemp=" - ${Effects["t"]}$(LangText "help9")${Unset}"
+            (( ${Uniq} )) && UniqTemp=" - ${Effects["t"]}$(LangText "help10")${Unset}"
+            echo -e "$UniqTemp" >&2
+
+            echo -e " - [${Effects["n"]}0-9${Unset}] : ${Effects["t"]}$(LangText "help4")${Unset}${Unset}" >&2
+
+            (( ${Random} )) && echo -e " - [${Effects["n"]}?${Unset}] : ${Effects["t"]}$(LangText "help5")${Unset}" >&2
+
+            (( ${Range} )) && echo -e " - [${Effects["n"]}x-y${Unset}] : ${Effects["t"]}$(LangText "help6")${Unset}" >&2
+
+            (( ${All} )) && echo -e " - [${Effects["n"]}*${Unset}] : ${Effects["t"]}$(LangText "help7")${Unset}" >&2
+
+            [[ ${Info} ]] && echo -e "\n$(LangText "help11")\n${Info}" >&2
+
+            echo -e "\n$(LangText "help8")" >&2
+
+            # Read attendant qu'une touche soit enfoncée avec cache du curseur
+            read -sn 1 -u 2
+
+            # Nettoyage du terminal
+            printf '\33[H\33[2J' >&2
+
+            # Affichage des textes
+            DisplayTexts
+
+            # Affichage du nouveau texte
+            echo >&2
+            LastText 1
+        ;;
+
+        # Si - est utilisé
+        "-")
+            # Si l'option n'est pas active, on saute la touche
+            if (( ! ${Range} ))
+            then
+                ErrorMessage 0 "error_default_mode@$(LangText "answer")@-@range" 1
+                continue
+            fi
+
+            # Vérifie si le range sera possible
+            if ! LimitCheck
+            then
+                ErrorMessage 0 "error_range_limit" 1
+                continue
+            fi
+
+            # Si la valeur temporaire est vide, et que la valeur précédente de la liste est un nombre, on l'utilise et le nombre est supprimé de la liste des réponses
+            if [[ -z ${AnswerTemp} && ${Answers[*]} && ${Answers[-1]} == +([0-9]) ]]
+            then
+                AnswerTemp="${Answers[-1]}"
+                unset Answers["-1"]
+
+                # Mise à jour de la variable AnswerList
+                AnswerNumbers
+            fi
+
+            # Si AnswerTemp est vide
+            if [[ -z ${AnswerTemp} ]]
+            then
+                ErrorMessage 0 "error_sign" 1
+                continue
+
+            # Si AnswerTemp contient un autre -
+            elif [[ ${AnswerTemp} == *-* ]]
+            then
+                ErrorMessage 0 "error_sign_already" 1
+                continue
+            fi
+
+            # Bloque le - si la plage va faire doublon, pour éviter 2-3 1-
+            # Vérifie que n-n+1 serait disponible sinon le range ne sert à rien
+            if (( ${Uniq} )) && InArray "$((AnswerTemp + 1))" "${AnswerList[*]}"
+            then
+                ErrorMessage 0 "error_sign_duplicate" 1
+                continue
+            fi
+
+            # Ajout du - à AnswerTemp
+            AnswerTemp+="-"
+
+            # Affichage du nouveau texte
+            LastText 1
+        ;;
+
+
+        "?")
+            # Si l'option n'est pas utilisée, on saute la touche
+            if (( ! ${Random} ))
+            then
+                ErrorMessage 0 "error_default_mode@$(LangText "answer")@?@random" 1
+                continue
+            fi
+
+            # Si * était utilisé, il faut réinitialiser la liste des réponses
+            [[ ${Answers[*]} == *"*"* && ${Uniq} -gt 0 ]] && unset Answers
+
+            # Vérifie qu'on peut ajouter une valeur
+            if LimitCheck
+            then
+                # Ajout de la réponse à la liste et réinitialisation de la réponse temporaire
+                Answers+=("?")
+                unset AnswerTemp
+
+                # Mise à jour de la variable AnswerList
+                AnswerNumbers
+
+                # Affichage du nouveau texte
+                LastText 1
+            fi
+        ;;
+
+
+        # Remplacement du contenu par le * avec un clear de la ligne
+        "*")
+            # Si l'option n'est pas utilisée, on saute la touche
+            if (( ! ${All} ))
+            then
+                ErrorMessage 0 "error_default_mode@$(LangText "answer")@*@all" 1
+                continue
+            fi
+
+            if (( ! ${Uniq} ))
+            then
+                Answers+=("*")
+
+            else
+                # Remplace la liste par * et réinitialisation de la réponse temporaire
+                Answers=("*")
+                unset AnswerTemp
+            fi
+
+            # Mise à jour de la variable AnswerList
+            AnswerNumbers
+
+            # Affichage du nouveau texte
+            LastText 1
+        ;;
+
+
+        # Remplacement des tab et des virgules par des espaces
+        " "|","|";"|"+"|$'\011')
+            # S'il n'y a plus de place, il ne se passe rien
+            LimitCheck || continue
+
+            # Pour éviter les doubles espaces
+            (( ! ${#AnswerTemp} )) && continue
+
+            # La réponse temporaire finit par -
+            if [[ ${AnswerTemp} == *- ]]
+            then
+                # Supprime le - et ajoute le nombre aux réponses et réinitialisation de la réponse temporaire
+                Answers+=("${AnswerTemp%-*}")
+                unset AnswerTemp
+
+                # Mise à jour de la variable AnswerList
+                AnswerNumbers
+
+            # La réponse temporaire contient -
+            elif [[ ${AnswerTemp} == *-* ]]
+            then
+                # Vérifie que le range est valable
+                if RangeCheck "${AnswerTemp}"
+                then
+                    RangeLimit=$(( ${#AnswerList[@]} + ${AnswerTemp#*-} - ${AnswerTemp%-*} + 1 ))
+
+                    # Vérifie qu'il y a encore assez de place
+                    if (( ${Max} && ${RangeLimit} < ${Max} ))
+                    then
+                       # Ajout de la réponse et réinitialisation de la réponse temporaire
+                        Answers+=("${AnswerTemp}")
+                        unset AnswerTemp
+
+                        # Mise à jour de la variable AnswerList
+                        AnswerNumbers
+
+                    else
+                        continue
+                    fi
+
+                else
+                    continue
+                fi
+
+            # La réponse temporaire ne contient pas de -
+            else
+                # Vérifie que le chiffre est disponible
+                AnswerCheck "${AnswerTemp}"
+
+                # Le nombre est disponible, on l'ajoute
+                if [[ ${?} == [02] ]]
+                then
+                    # Ajout de la réponse et réinitialisation de la réponse temporaire
+                    Answers+=("${AnswerTemp}")
+                    unset AnswerTemp
+
+                    # Mise à jour de la variable AnswerList
+                    AnswerNumbers
+
+                # Si le nombre n'est pas disponible, on ne le valide pas
+                else
+                    ErrorMessage 0 "error_used@${AnswerTemp}" 1
+                    continue
+                fi
+            fi
+
+            # Affichage du nouveau texte
+            LastText 1
+        ;;
+
+
+        # Lors de la validation via la touche entrée
+        ""|$'\012')
+            # Gestion de la réponse temporaire
+            if [[ ${AnswerTemp} ]]
+            then
+                # Suppression du - final si c'est le cas (validation du genre 8-)
+                AnswerTemp="${AnswerTemp/%-}"
+
+                # Si c'est un range
+                if [[ ${AnswerTemp} == *-* ]]
+                then
+                    # Si le range est valable, on l'ajoute, pas besoin de tester les limite, ça a été fait au tour d'avant
+                    RangeCheck "${AnswerTemp}" && Answers+=($(seq "${AnswerTemp%-*}" "${AnswerTemp#*-}"))
+
+                # Si ce n'est pas un range
+                else
+                    # Test la réponse temporaire
+                    AnswerCheck "${AnswerTemp}"
+
+                    # Code 0 : Le nombre peut avoir un nouveau chiffre ajouté et est lui-même disponible
+                    # Code 2 : Le nombre ne peut avoir un nouveau chiffre ajouté (car déjà tous utilisés) mais est lui-même disponible
+                    # Ajout de la réponse temporaire
+                    [[ ${?} == [02] ]] && Answers+=("${AnswerTemp}")
+                fi
+
+                # Destruction de la réponse temporaire
+                unset AnswerTemp
+            fi
+
+            # Mise à jour de la variable AnswerList
+            AnswerNumbers
+
+            # Si un minimum de réponse est attendu
+            if (( ${Min} ))
+            then
+                # Si le nombre minimum de réponse n'est pas atteint
+                if (( ${Min} > ${#AnswerList[@]} ))
+                then
+                    LastText 0
+
+                    if (( ${Debug} )); then ErrorMessage 0 "error_min" 1
+                    else echo -en "\r${Clear}${LastText} " >&2; fi
+
+                    continue
+                fi
+            fi
+
+            # Texte final
+            LastText 1
+
+            # S'il n'y a eu aucune réponse, renvoie le texte par défaut et stop ici
+            [[ -z ${AnswerList[*]} ]] && ExitErreur
+
+            # Arrêt de la boucle
+            break
+        ;;
+
+
+        # Lors de l'utilisation de la touche retour arrière
+        $'\177')
+            ## Récupération de la valeur à traiter
+            # S'il y a une réponse temporaire
+            if (( ${#AnswerTemp} ))
+            then
+                [[ ${AnswerTemp: -1} != "-" ]] && AnswerTemp="${AnswerTemp::-1}"
+
+            # Si la liste n'est pas vide
+            elif [[ ${Answers[*]} ]]
+            then
+                AnswerTemp="${Answers[-1]}"
+                unset Answers["-1"]
+
+                # Mise à jour de la variable AnswerList
+                AnswerNumbers
+
+            # Sinon c'est un texte vide
+            else
+                unset Answers AnswerTemp
+
+                # Mise à jour de la variable AnswerList
+                AnswerNumbers
+            fi
+
+            ## Traitement de la valeur
+            # Remise en place du texte de base si c'était *
+            if [[ ${AnswerTemp} == "*" ]]
+            then
+                unset Answers AnswerTemp
+
+                # Mise à jour de la variable AnswerList
+                AnswerNumbers
+
+            # Suppression du ?
+            elif [[ ${AnswerTemp} == "?" ]]
+            then
+                unset AnswerTemp
+
+            # Pour les nombres
+            elif [[ ${AnswerTemp} == +([0-9]) ]]
+            then
+                # Si le nombre peut servir de base on le conserve
+                if (( ${#AnswerTemp} == 1 )) && AnswerCheck "${AnswerTemp}"
+                then
+                    AnswerTemp="${AnswerTemp}"
+
+                # Si le nombre - 1 chiffre peut servir de base on le conserve
+                elif (( ${#AnswerTemp} == 2 )) && AnswerCheck "${AnswerTemp:0:-1}"
+                then
+                    AnswerTemp="${AnswerTemp:0:-1}"
+
+                # Si le nombre - 2 chiffres peut servir de base on le conserve
+                elif (( ${#AnswerTemp} == 3 )) && AnswerCheck "${AnswerTemp:0:-2}"
+                then
+                    AnswerTemp="${AnswerTemp:0:-2}"
+
+                else
+                    unset AnswerTemp
+                fi
+
+            # Pour les plages
+            elif [[ ${AnswerTemp} == *-* ]]
+            then
+                MaxValue="${AnswerTemp#*-}"
+
+                # Si le nombre max peut servir de base on le conserve
+                if (( ${#MaxValue} == 1 )) && AnswerCheck "${MaxValue}"
+                then
+                    AnswerTemp="${AnswerTemp}"
+
+                # Si le nombre max - 1 chiffre peut servir de base on le conserve
+                elif (( ${#MaxValue} == 2 )) && AnswerCheck "${MaxValue:0:-1}"
+                then
+                    AnswerTemp="${AnswerTemp%-*}-${MaxValue:0:-1}"
+
+                # Si le nombre max - 2 chiffres peut servir de base on le conserve
+                elif (( ${#MaxValue} == 1 )) && AnswerCheck "${MaxValue:0:-2}"
+                then
+                    AnswerTemp="${AnswerTemp%-*}-${MaxValue:0:-2}"
+
+                # Si l'élément de test est -
+                elif [[ ${AnswerTemp: -1} == "-" ]]
+                then
+                    # Si le nombre peut servir de base ou non
+                    if AnswerCheck "${AnswerTemp%-*}"
+                    then
+                        AnswerTemp="${AnswerTemp%-*}"
+
+                    else
+                        # Ajout de la réponse à la liste et réinitialisation de la réponse temporaire
+                        Answers+=("${AnswerTemp%-*}")
+                        unset AnswerTemp
+
+                        # Mise à jour de la variable AnswerList
+                        AnswerNumbers
+                    fi
+
+                # Si le nombre max de ne pas servir de base, on le supprime mais on laisse ${min}-
+                else
+                    AnswerTemp="${AnswerTemp%-*}-"
+                fi
+            fi
+
+            # Nouveau texte
+            LastText 1
+        ;;
+
+
+        # Lettre de l'exit
+        "${ExitLetter}")
+            # Si l'action n'est pas active'
+            if [[ ${Bar} != *"${Touche,,}"* ]]
+            then
+                ErrorMessage 0 "error_key@${Touche}" 1
+                continue
+            fi
+
+            # Destruction des variables
+            unset Answers AnswerTemp
+
+            # Réinitialisation du texte
+            echo -en "\r${Clear}${Effects["t"]}${TexteBase}${Effects["Error"]}$(LangText "info_exit_on")${Unset}" >&2
+
+            # Arrêt du script
+            ExitErreur
+        ;;
+
+
+        # Touches spéciales (début, fin, page haute ou page basse, Fx, flèches...)
+        $'\033')
+            # Permet de savoir s'il y a un autre caractère qui suit, si ce n'est pas le cas, c'est qu'on a utilisé la touche échap
+            read -t 0 -u 2
+
+            # Réinitialisation du texte et arrêt de la boucle si la touche échap a été utilisée
+            if (( ${?} ))
+            then
+                # Destruction des variables
+                unset Answers AnswerTemp
+
+                # Réinitialisation du texte
+                LastText 1
+
+                # Arrêt du script
+                ExitErreur
+            fi
+
+            # Pour les touches spéciales autres que échap
+            ErrorMessage 0 "error_key@special" 1
+
+            # Permet de décharger les autres caractères qui suivent en cas de touches spéciales
+            while true
+            do
+                read -r -u 2 -sn 1
+                read -u 2 -t 0
+                (( ${?} )) && break
+            done
+        ;;
+
+
+        *)
+            # Touche non fonctionnelle
+            ErrorMessage 0 "error_key@${Touche}" 1
+        ;;
+    esac
+done
+
+
+# Saut de ligne esthétique
+echo >&2
+
+
+
+#########################
+## Renvoie des valeurs ##
+#########################
+### Si c'est un ?, il faut le changer en nombre
+# il faut le faire ici pour éviter les doublons avec ?
+if [[ ${AnswerList[*]} == *"?"* ]]
+then
+    for Index in "${!AnswerList[@]}"
+    do
+        # Nécessaire pour être sur qu'on est bien au dernier nombre car en cas de choix identiques ça pose pb
+        Number="${AnswerList[${Index}]}"
+
+        # Si c'est un ?, il faut le changer en nombre
+        if [[ ${Number} == *"?"* ]]
+        then
+            # Si le mode unique est actif
+            if (( ${Uniq} ))
+            then
+                # Liste temporaire supprimant les valeurs déjà utilisées ainsi que les 0, important de le réinitialiser
+                unset ListeTemp
+
+                for Item in "${!Proposals[@]}"
+                do
+                    (( ${Item} )) && ! InArray "${Item}" "${AnswerList[*]}" && ListeTemp+=("${Item}")
+                done
+
+                # Change le ? en une autre valeur non utilisée
+                AnswerList[${Index}]="${ListeTemp[$((RANDOM % ${#ListeTemp[@]}))]}"
+
+            # Si pas de mode unique
+            else
+                # Change le ? en une autre valeur
+                AnswerList[${Index}]="$((RANDOM % ${#Proposals[@]} ))"
+            fi
+        fi
+    done
+fi
+
+
+### Traite chaque numéro retourné par la fonction AnswerNumbers
+for Index in "${!AnswerList[@]}"
+do
+    # Nécessaire pour être sur qu'on est bien au dernier nombre car en cas de choix identiques ça pose pb
+    Number="${AnswerList[${Index}]}"
+
+    # Si c'est vide, on saute
+    [[ -z ${Number} ]] && continue
+
+    # Remplissage du tableau
+    FormatReader "${Proposals[${Number}]}" "OutputText" "${Number}"
+
+    # Envoie du texte
+    if (( ${Index} == ${#AnswerList[@]} - 1 )); then echo -en "${Item["Line"]}"
+    else echo -en "${Item["Line"]}${Delimiter}"; fi
+done
+
+
+# Saut de ligne esthétique
+echo >&2
+
+
+### Débloque l’expansion de ? et de *
+set +f
+
+
+### Arrêt normal
+exit 0

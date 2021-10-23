@@ -1,0 +1,690 @@
+# French translation of the hizoselect command.
+# Copyright (C) 2017 Belleguic Terence <hizo@free.fr>
+# This file is distributed under the same license as the hizoselect package.
+# Belleguic Terence <hizo@free.fr>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: hizo@free.fr\n"
+"POT-Creation-Date: 2021-09-02 15:11+0200\n"
+"PO-Revision-Date: 2017-09-28 15:30+0200\n"
+"Last-Translator: Belleguic Terence aka Hizo <hizo@free.fr>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+"X-Generator: Poedit 2.0.1\n"
+
+#. TranslationAssistance ==============================> Texts of the errors
+#: functions/translation.sh:28
+msgid "The %s argument needs a value."
+msgstr "L'argument %s nécessite une valeur."
+
+#: functions/translation.sh:29
+msgid "The number %s is out of selection."
+msgstr "Le nombre %s est hors sélection."
+
+#: functions/translation.sh:30
+msgid "%s: %s is not an accepted value."
+msgstr "%s : %s n'est pas une valeur acceptée."
+
+#: functions/translation.sh:31
+msgid "%s: %s is not in the proposals list."
+msgstr "%s : %s n'est pas dans la liste des propositions."
+
+#: functions/translation.sh:32
+msgid "%s: The number of values is greater than the number of items."
+msgstr "%s : Le nombre de valeur est plus élevé que le nombre de proposition."
+
+#: functions/translation.sh:33
+msgid "%s: Impossible to use %s because %s mode is disabled."
+msgstr "%s : Impossible d'utiliser %s car le mode %s est désactivé."
+
+#: functions/translation.sh:34
+msgid "%s: Impossible to associate * with another value."
+msgstr "%s : Impossible de coupler * avec une autre valeur."
+
+#: functions/translation.sh:35
+msgid ""
+"The effects are define by a number between 0 and 255 for effects or by bold "
+"dim smul smso."
+msgstr ""
+"Les effets sont définis par un nombre entre 0 et 255 pour les couleurs ou "
+"par bold dim smul smso."
+
+#: functions/translation.sh:36
+msgid "%s: file not founded."
+msgstr "%s : fichier introuvable."
+
+#: functions/translation.sh:37
+msgid "The input argument must have %%n."
+msgstr "L'argument input nécessite obligatoirement l'utilisation de %%n."
+
+#: functions/translation.sh:38
+msgid "Insufficient number of items."
+msgstr "Nombre de proposition insuffisant."
+
+#: functions/translation.sh:39
+msgid "%s key isn't usable."
+msgstr "La touche %s n'est pas utilisable."
+
+#: functions/translation.sh:40
+msgid "Maximum limit reached."
+msgstr "Limite maximale atteinte."
+
+#: functions/translation.sh:41
+msgid "Number of answer insufficient."
+msgstr "Nombre de réponse insufisant."
+
+#: functions/translation.sh:42
+msgid "The --min value cannot be greater than the --max value."
+msgstr "La valeur de --min ne peut être plus grande que celle de --max."
+
+#: functions/translation.sh:43
+msgid "%s: - needs a MIN value before and a MAX value after."
+msgstr "%s : - nécessite une valeur MIN avant et une valeur MAX après."
+
+#: functions/translation.sh:44
+msgid "The second number must be greater than the first."
+msgstr "Le 2ème nombre doit être plus grand que le 1er."
+
+#: functions/translation.sh:45
+msgid "The range needs a second number."
+msgstr "La plage nécessite un 2ème nombre."
+
+#: functions/translation.sh:46
+msgid "The range will exceed the maximum answer number."
+msgstr "La plage excédera la limite du nombre de réponse."
+
+#: functions/translation.sh:47
+msgid "A number must precede the - sign."
+msgstr "Un nombre doit obligatoirement précéder le signe -."
+
+#: functions/translation.sh:48
+msgid "Impossible to add more - signs."
+msgstr "Impossible de cumuler les signes -."
+
+#: functions/translation.sh:49
+msgid "This value range will unnecessarily duplicate."
+msgstr "Cette nouvelle plage va faire doublon."
+
+#: functions/translation.sh:50
+msgid "The %s argument is unknow."
+msgstr "L'argument %s est inconnu."
+
+#: functions/translation.sh:51
+msgid "%s number already entered."
+msgstr "Nombre %s déjà inscrit."
+
+#: functions/translation.sh:52
+msgid "Please explain to hizo@free.fr how this error happened."
+msgstr "Merci d'indiquer ce que vous avez fait à hizo@free.fr."
+
+#: functions/translation.sh:53
+msgid "%s: A number cannot start by 0."
+msgstr "%s : Un nombre ne peut commencer par 0."
+
+#. TranslationAssistance ==============================> Texts
+#: functions/translation.sh:56
+msgid "Selection: "
+msgstr "Sélection : "
+
+#: functions/translation.sh:57
+msgid "One expected answer"
+msgid_plural "%d expected answers"
+msgstr[0] "Une réponse attendue"
+msgstr[1] "%d réponses attendues"
+
+#: functions/translation.sh:58
+msgid "Between %s and %s expected answers"
+msgstr "Entre %s et %s réponses attendues"
+
+#: functions/translation.sh:59
+msgid "Minimum of %d expected answer"
+msgid_plural "Minimum of %d expected answers"
+msgstr[0] "Minimum d'%d réponse attendue"
+msgstr[1] "Minimum de %d réponses attendues"
+
+#: functions/translation.sh:60
+msgid "Maximum of %d expected answer"
+msgid_plural "Maximum of %d expected answers"
+msgstr[0] "Maximum d'%d réponse attendue"
+msgstr[1] "Maximum de %d réponses attendues"
+
+#: functions/translation.sh:61
+msgid "Answer"
+msgstr "Réponse"
+
+#. TranslationAssistance ==============================> Texts of the dynamic help
+#: functions/translation.sh:65
+msgid "Help with the use of HizoSelect"
+msgstr "Aide à l'utilisation de HizoSelect"
+
+#: functions/translation.sh:66
+msgid "Number of expected answers:"
+msgstr "Nombre de réponses attendues :"
+
+#: functions/translation.sh:67
+msgid "Possible answers:"
+msgstr "Réponses possibles :"
+
+#: functions/translation.sh:68
+msgid "The numbers select their items."
+msgstr "Les nombres renvoient les valeurs correspondantes."
+
+#: functions/translation.sh:69
+msgid "The ? select random items."
+msgstr "Les ? renvoient des valeurs aléatoires."
+
+#: functions/translation.sh:70
+msgid ""
+"The range select items starts from the first number to the second number "
+"included."
+msgstr "Les plages de valeurs renvoient les valeurs entre x et y compris."
+
+#: functions/translation.sh:71
+msgid "The * select all items."
+msgstr "Le * renvoie toutes les valeurs"
+
+#: functions/translation.sh:72
+msgid "Press any key for exiting the help."
+msgstr "Appuyer sur une touche pour quitter l'aide."
+
+#: functions/translation.sh:73
+msgid "It's possible to select several times a same item."
+msgstr "Il est possible de sélectionner plusieurs fois une même valeur."
+
+#: functions/translation.sh:74
+msgid "Each item can be only select one time."
+msgstr "Chaque proposition ne peut être sélectionnée qu'une seule fois."
+
+#: functions/translation.sh:75
+msgid "Information:"
+msgstr "Information :"
+
+#. TranslationAssistance ==============================> Texts of the help argument
+#: functions/translation.sh:79
+msgid "Options:"
+msgstr "Options :"
+
+#: functions/translation.sh:80
+msgid ""
+"Effects of actions, commentaries, errors, numbers, prompt text, secret "
+"texts, texts and title."
+msgstr ""
+"Effets des actions, commentaires, des erreurs, des nombres, du texte du "
+"prompt, des textes secrets, des textes et du titre."
+
+#: functions/translation.sh:81
+msgid ""
+"Enabled actions on start. If the action is visible in the bar, the user can "
+"change it."
+msgstr ""
+"Actions actives au démarrage. Si l'action est visible dans la barre, "
+"l'utilisateur peut la modifier."
+
+#: functions/translation.sh:82
+msgid "Hides error messages."
+msgstr "Cache les messages d'erreur."
+
+#: functions/translation.sh:83
+msgid "Pre-filled answers."
+msgstr "Réponses pré-rentrées."
+
+#: functions/translation.sh:84
+msgid "Demonstration of commands."
+msgstr "Démonstration de commandes."
+
+#: functions/translation.sh:85
+msgid "Displays this help."
+msgstr "Affiche cette aide"
+
+#: functions/translation.sh:86
+msgid "Mandatory answers."
+msgstr "Réponses obligatoires."
+
+#: functions/translation.sh:87
+msgid "Format of the items."
+msgstr "Formatage des propositions."
+
+#: functions/translation.sh:88
+msgid "Maximal number of answers."
+msgstr "Nombre maximal de réponse attendue."
+
+#: functions/translation.sh:89
+msgid "Minimal number of answers."
+msgstr "Nombre minimal de réponse attendue."
+
+#: functions/translation.sh:90
+msgid "Allows to return the same answer several times."
+msgstr "Permets de renvoyer plusieurs fois la même réponse."
+
+#: functions/translation.sh:91
+msgid "Enables the use of symbols in the answers."
+msgstr "Active l'utilisation des symboles dans les réponses."
+
+#: functions/translation.sh:92
+msgid "Displayed text between the title and the list of items."
+msgstr "Texte affiché entre le titre et la liste de propositions."
+
+#: functions/translation.sh:93
+msgid "Sort the proposals by the choiced argument."
+msgstr "Range les propositions de l'argument choisi."
+
+#: functions/translation.sh:94
+msgid "Format of the returned answers."
+msgstr "Formatage des réponses retournées."
+
+#: functions/translation.sh:95
+msgid "Displayed text while waiting for the choice."
+msgstr "Texte affiché lors de l'attente de réponse."
+
+#: functions/translation.sh:96
+msgid "First displayed text like a title."
+msgstr "Premier texte affiché comme un titre."
+
+#: functions/translation.sh:97
+msgid "Delete redundant items by the choiced argument."
+msgstr "Supprime les propositions en doublon de l'argument choisi."
+
+#: functions/translation.sh:98
+msgid "Version of the hizoselect command."
+msgstr "Version de la commande hizoselect"
+
+#: functions/translation.sh:99
+msgid "Examples:"
+msgstr "Exemples :"
+
+#: functions/translation.sh:100
+msgid "More informations:"
+msgstr "Plus d'informations :"
+
+#: functions/translation.sh:101
+msgid "item(s)     "
+msgstr "proposition(s)"
+
+#: functions/translation.sh:102
+msgid "int   "
+msgstr "entier"
+
+#: functions/translation.sh:103
+msgid "text "
+msgstr "texte"
+
+#: functions/translation.sh:104
+msgid "Management of the content of the bar and its actions."
+msgstr "Gestion du contenu de la barre et de ses actions."
+
+#: functions/translation.sh:105
+msgid "Origin of the proposals, command AND/OR stdin."
+msgstr "Origine des propositions, commande ET/OU stdin."
+
+#: functions/translation.sh:106
+msgid "Delimiter to use between of the returned items."
+msgstr "Délimiteur à utiliser entre les propositions retournées."
+
+#: functions/translation.sh:107
+msgid "Text to add in the help screen."
+msgstr "Texte additionnel à afficher dans l'aide."
+
+#: functions/translation.sh:108
+msgid "HizoSelect command help"
+msgstr "Aide de la commande HizoSelect"
+
+#: functions/translation.sh:109
+msgid "Name of the command displayed in error messages."
+msgstr "Nom de la commande affichée dans les messages d'erreurs."
+
+#: functions/translation.sh:110
+msgid "Clear the terminal before display the texts."
+msgstr "Nettoyer le terminal avant d'afficher les textes."
+
+#: functions/translation.sh:111
+msgid "file"
+msgstr "fichier"
+
+#: functions/translation.sh:112
+msgid "Load a config file who contains some values."
+msgstr "Charge un fichier de config contenant divers valeurs."
+
+#: functions/translation.sh:113
+msgid "Delimiter between the proposals from stdin"
+msgstr "Délimiteur entre les propositions en provenance de stdin."
+
+#. TranslationAssistance ==============================> Texts of the examples
+#: functions/translation.sh:117
+msgid "What example(s) do you want see?"
+msgstr "Quel(s) exemple(s) veux-tu voir ?"
+
+#: functions/translation.sh:118
+msgid ""
+"%t=Would you marry me? %c=One number by default with a limit to 1 item and "
+"output change"
+msgstr ""
+"%t=Veux-tu m'épouser ? %c=Une valeur par défaut avec un maximum d'une "
+"réponse et le format de sorti modifié"
+
+#: functions/translation.sh:119
+msgid ""
+"%t=Choose your menu %c=All by default with a input number for read command"
+msgstr ""
+"%t=Choisis ton menu %c=Tout (All) par défaut avec un numéro d'input pour la "
+"commande read"
+
+#: functions/translation.sh:120
+msgid ""
+"%t=Write the name 'Belleguic' %c=Numbers by default with columns format and "
+"several mode enable"
+msgstr ""
+"%t=Écris le nom 'Belleguic' %c=Nombres par défaut au format colonnes et mode "
+"several activé"
+
+#: functions/translation.sh:121
+msgid ""
+"%t=What can be the age of a minor? %c=Range by default with no-all and no-"
+"random"
+msgstr ""
+"%t=Quel peut-être l'âge d'un mineur ? %c=Plage par défaut avec no-all et no-"
+"random"
+
+#: functions/translation.sh:122
+msgid ""
+"%t=I remove duplicates for you %c=Uniq item option and prompt text change"
+msgstr ""
+"%t=Je supprime les doublons pour toi %c=Option de proposition unique et "
+"texte du prompt modifié"
+
+#: functions/translation.sh:123
+msgid "%t=Advanced input/output argument %c=How-to use format"
+msgstr "%t=Arguments input/output avancés %c=Comment utiliser le format"
+
+#: functions/translation.sh:124
+msgid "%t=Traitment of files in a for loop %c=How-to use returns with for loop"
+msgstr ""
+"%t=Traiter les fichier choisis dans une boucle for %c=Comment utiliser les "
+"retours avec une boucle for"
+
+#: functions/translation.sh:125
+msgid "%t=Use multi read %c=How-to use multi while read loop"
+msgstr "%t=Utiliser plusieurs read %c=Comment cumuler les boucles read"
+
+#: functions/translation.sh:126
+msgid "Command:"
+msgstr "Commande :"
+
+#: functions/translation.sh:127
+msgid "Would you marry me?"
+msgstr "Veux-tu m'épouser ?"
+
+#: functions/translation.sh:128
+msgid "The number %n is %t (%c) and his secret value is %s."
+msgstr "Le nombre %n est %t (%c) et sa valeur secréte est %s."
+
+#: functions/translation.sh:129
+msgid "%t=Yes %c=I want it! %s=y"
+msgstr "%t=Oui %c=Je le veux! %s=y"
+
+#: functions/translation.sh:130
+msgid "%t=No %c=Sorry... %s=n"
+msgstr "%t=Non %c=Désolé... %s=n"
+
+#: functions/translation.sh:131
+msgid "I want eat a %t"
+msgstr "Je veux manger un %t"
+
+#: functions/translation.sh:132
+msgid "Choose your menu (All by default):"
+msgstr "Choisi ton menu (Tout par défaut) :"
+
+#: functions/translation.sh:133
+msgid "%t=Entry %c=Vegetables"
+msgstr "%t=Entrée %c=Crudités"
+
+#: functions/translation.sh:134
+msgid "%t=Dish %c=Steak and fries"
+msgstr "%t=Plat %c=Steak et frites"
+
+#: functions/translation.sh:135
+msgid "%t=Dessert %c=Flan"
+msgstr "%t=Dessert %c=Flan"
+
+#: functions/translation.sh:136
+msgid "Write the name 'Belleguic' (Numbers by default)"
+msgstr "Écris le nom 'Belleguic' (Nombres par défaut)"
+
+#: functions/translation.sh:137
+msgid "You write:"
+msgstr "Tu écris :"
+
+#: functions/translation.sh:138
+msgid "What can be the age of a minor?"
+msgstr "Quel peut être l'âge d'un mineur ?"
+
+#: functions/translation.sh:139
+msgid "A minor may be aged: %s years"
+msgstr "Un mineur peut être agé de : %s ans"
+
+#: functions/translation.sh:140
+msgid "I remove duplicates for you:"
+msgstr "Je supprime les doublons pour toi :"
+
+#: functions/translation.sh:141
+msgid "You have choiced: %t"
+msgstr "Tu as choisi: %t"
+
+#: functions/translation.sh:142
+msgid "I wait after you:"
+msgstr "J'attends après toi :"
+
+#: functions/translation.sh:143
+msgid "Advanced input/output argument:"
+msgstr "Arguments input/output avancés"
+
+#: functions/translation.sh:144
+msgid ""
+"[%n] (mandatory) <%t and %c and %s (text and commentary and secret text)|%t "
+"and %c (text and commentary)|%t and %s (text and secret text)|%c and %s "
+"(commentary and secret text)|%t (text)|%c (commentary)|%s (secret text)>"
+msgstr ""
+"[%n] (obligatoire) <%t et %c et %s (texte et commentaire et texte secret)|%t "
+"et %c (texte et commentaire)|%t et %s (texte et texte secret)|%c et %s "
+"(commentaire et texte secret)|%t (texte)|%c (commentaire)|%s (texte secret)>"
+
+#: functions/translation.sh:145
+msgid ""
+"\\<%n\\> (always exists) \\| <%t and %c and %s (text and commentary and "
+"secret text)|%t and %c (text and commentary)|%t and %s (text and secret "
+"text)|%c and %s (commentary and secret text)|%t (text)|%c (commentary)|%s "
+"(secret text)>"
+msgstr ""
+"\\<%n\\> (existe toujours) \\| <%t et %c et %s (texte et commentaire et "
+"texte secret)|%t et %c (texte et commentaire)|%t et %s (texte et texte "
+"secret )|%c et %s (commentaire et texte secret)|%t (texte)|%c (commentaire)|"
+"%s (texte secret)>"
+
+#: functions/translation.sh:146
+msgid "Select the files to update"
+msgstr "Choisir les fichiers à mettre à jour"
+
+#: functions/translation.sh:147
+msgid "I choosen %s."
+msgstr "J'ai choisi %s."
+
+#: functions/translation.sh:148
+msgid "%t=Select software to install %c=Use the secret text"
+msgstr "%t=Choisir les logiciels à installer %c=Utilisation du texte secret"
+
+#: functions/translation.sh:149
+msgid "%t=Select women as you know %c=Create an array indexed"
+msgstr ""
+"%t=Indiquez les femmes que vous connaissez %c=Création d'un tableau indexé"
+
+#: functions/translation.sh:150
+msgid "Select software to install"
+msgstr "Choisir les logiciels à installer"
+
+#: functions/translation.sh:151
+msgid "Select women as you know"
+msgstr "Indiquez les femmes que vous connaissez"
+
+#. TranslationAssistance ==============================> h letter for help
+#: functions/translation.sh:155
+msgid "h"
+msgstr "a"
+
+#: functions/translation.sh:156
+msgid "Help"
+msgstr "Aide"
+
+#. TranslationAssistance ==============================> c letter for effects
+#: functions/translation.sh:158
+msgid "c"
+msgstr "e"
+
+#: functions/translation.sh:159
+msgid "Enable effects"
+msgstr "Activer effets"
+
+#: functions/translation.sh:160
+msgid "Disable effects"
+msgstr "Désactiver effets"
+
+#. TranslationAssistance ==============================> v letter for view
+#: functions/translation.sh:162
+msgid "v"
+msgstr "c"
+
+#: functions/translation.sh:163
+msgid "View in columns"
+msgstr "Voir en colonnes"
+
+#: functions/translation.sh:164
+msgid "View in lines"
+msgstr "Voir en lignes"
+
+#. TranslationAssistance ==============================> d letter for debug
+#: functions/translation.sh:166
+msgid "d"
+msgstr "d"
+
+#: functions/translation.sh:167
+msgid "Enable debug"
+msgstr "Activer le debogage"
+
+#: functions/translation.sh:168
+msgid "Disable debug"
+msgstr "Désactiver le debogage"
+
+#. TranslationAssistance ==============================> l letter for lang
+#: functions/translation.sh:170
+msgid "l"
+msgstr "l"
+
+#: functions/translation.sh:171
+msgid "French translation"
+msgstr "Traduction française"
+
+#: functions/translation.sh:172
+msgid "English translation"
+msgstr "Traduction anglaise"
+
+#. TranslationAssistance ==============================> e letter for exit
+#: functions/translation.sh:174
+msgid "e"
+msgstr "q"
+
+#: functions/translation.sh:175
+msgid "Exit"
+msgstr "Quitter"
+
+#~ msgid "Disables all modes: all, range and random."
+#~ msgstr "Désactive tous les modes : all, range et random."
+
+#~ msgid "Avoids redundant items."
+#~ msgstr "Empêche les propositions doublons."
+
+#~ msgid ""
+#~ "To translate the question and the proposals, launch: LANGUAGE=en "
+#~ "hizoselect --ex"
+#~ msgstr ""
+#~ "Pour traduire la question et les propositions, lancez : LANGUAGE=fr "
+#~ "hizoselect --ex"
+
+#~ msgid "Let's go to eat at %s."
+#~ msgstr "Allons manger chez %s."
+
+#~ msgid "I want then menu at %s."
+#~ msgstr "Je veux le menu à %s."
+
+#~ msgid "I want eat %s."
+#~ msgstr "Je veux manger un %s."
+
+#~ msgid "What do you want eat?"
+#~ msgstr "Que veux-tu manger ?"
+
+#~ msgid "What menu do you want?"
+#~ msgstr "Quel menu veux-tu ?"
+
+#~ msgid "Where do you want to eat?"
+#~ msgstr "Où veux-tu manger ?"
+
+#~ msgid "Displayed text before the list of items."
+#~ msgstr "Texte affiché entre le titre et la liste de propositions."
+
+#~ msgid ""
+#~ "Max value is greater than the number of items with several mode disabled."
+#~ msgstr ""
+#~ "Valeur max plus grande que le nombre de proposition et mode several "
+#~ "inactif."
+
+#~ msgid "%s cannot be used because the symbol %s is not enabled."
+#~ msgstr "%s ne peut être utilisé car le symbole %s n'est pas actif."
+
+#~ msgid "The min value cannot be greater than the number of items."
+#~ msgstr ""
+#~ "La valeur de min ne peut être plus grande que le nombre de propositions."
+
+#~ msgid ""
+#~ "Launches the display without colors but the effect action can be enabled "
+#~ "by user."
+#~ msgstr ""
+#~ "Lance l'affichage sans couleurs mais l'action de l'effet peut être "
+#~ "activée par l'utilisateur."
+
+#~ msgid "Error in the default values: %s is not in the list."
+#~ msgstr "Erreur dans les valeurs par défaut, %s n'est pas dans la liste."
+
+#~ msgid "Double spacing is impossible."
+#~ msgstr "Double espace impossible."
+
+#~ msgid "Formats the display in column mode."
+#~ msgstr "Formate l'affichage en colonnes."
+
+#~ msgid "Disables all, use of *."
+#~ msgstr "Désactive l'utilisation de *."
+
+#~ msgid "Disables random, use of ?."
+#~ msgstr "Désactive l'utilisation de ?."
+
+#~ msgid "Disables range."
+#~ msgstr "Désactive l'utilisation de plage."
+
+#~ msgid "Disables display of the help bar."
+#~ msgstr "Désactive l'affichage de la barre d'aide."
+
+#~ msgid "The maximum limit cannot be equal to 0."
+#~ msgstr "La limite maximale ne peut être égale à 0."
+
+#~ msgid "%s can no longer serve as a basis."
+#~ msgstr "%s ne peut plus servir de base."
+
+#~ msgid "- needs a MIN value before."
+#~ msgstr "- nécessite une valeur MIN avant."
+
+#~ msgid "Press the 'Entry' key to see the next example or to exit."
+#~ msgstr ""
+#~ "Presser la touche 'Entrée' pour passer à l'exemple suivant ou pour "
+#~ "quitter."

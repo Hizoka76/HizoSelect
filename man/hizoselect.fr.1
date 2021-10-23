@@ -1,0 +1,683 @@
+.TH HIZOSELECT 1 "5 Juin 2021" "Version 3.1.6" "Manuel de la commande HizoSelect"
+
+
+.SH NOM
+\fBhizoselect\fP - Créateur de liste de proposition complètement personnalisable avec un large choix de réponse en bash.
+
+
+.SH UTILISATION
+\fBhizoselect\fP
+.br
+.RS
+[\fB-e\fP|\fB--effects\fP \fI%[a-Z] %(ActKey|ActName|Error|Prompt|Title)\fP]
+.br
+[\fB-A\fP|\fB--actions\fP \fIc d v\fP]
+.br
+[\fB-b\fP|\fB--bar\fP \fIh c v d l e\fP]
+.br
+[\fB-c\fP|\fB--config\fP \fIfichier\fP]
+.br
+[\fB-C\fP|\fB--clear\fP]
+.br
+[\fB-d\fP|\fB--default\fP \fIréponse(s)\fP]
+.br
+[\fB-D\fP|\fB--delimiter\fP \fItexte\fP]
+.br
+[\fB-f\fP|\fB--force\fP \fIréponse(s)\fP]
+.br
+[\fB-i\fP|\fB--input\fP \fIformat\fP]
+.br
+[\fB--id\fP|\fB--input-delimiter\fP \fIcaractère\fP]
+.br
+[\fB-I\fP|\fB--info\fP \fItexte\fP]
+.br
+[\fB-m\fP|\fB--min\fP \fIentier\fP]
+.br
+[\fB-M\fP|\fB--max\fP \fIentier\fP]
+.br
+[\fB-n\fP|\fB--name\fP \fItexte\fP]
+.br
+[\fB-o\fP|\fB--output\fP \fIformat\fP]
+.br
+[\fB-p\fP|\fB--prompt\fP \fItexte\fP]
+.br
+[\fB-P\fP|\fB--proposals\fP \fI[0-3]\fP]
+.br
+[\fB-s\fP|\fB--several\fP|\fB--multi\fP]
+.br
+[\fB-S\fP|\fB--symbols\fP \fIa r R\fP]
+.br
+[\fB--sort\fP \fI%[a-Z]\fP]
+.br
+[\fB-t\fP|\fB--text\fP \fItexte\fP]
+.br
+[\fB-T\fP|\fB--title\fP \fItexte\fP]
+.br
+[\fB-u\fP|\fB--uniq-item\fP \fI%[a-Z]\fP]
+.br
+propositions
+.br
+
+[\fB-e\fP|\fB--effects\fP \fI%[a-Z] %(ActKey|ActName|Error|Prompt|Title)\fP]
+.br
+[\fB-h\fP|\fB-?\fP|\fB--help\fP]
+.br
+
+[\fB-e\fP|\fB--effects\fP \fI%[a-Z] %(ActKey|ActName|Error|Prompt|Title)\fP]
+.br
+[\fB-E\fP|\fB--examples\fP]
+.br
+
+[\fB-v\fP|\fB--version\fP]
+.RE
+
+.SH DESCRIPTION
+Cette commande permet de créer une liste de proposition avec des commentaires, des textes secrets, une sélection par défaut ainsi qu'un texte d'attente.
+.br
+Les données renvoyaient sont personnalisable également.
+.br
+Les réponses peuvent être limitées, faites par numéro, par tranche ou en totalité.
+.br
+Les couleurs ne sont pas obligatoires et peuvent être modifiées.
+
+
+.SH OPTIONS
+Il est \fBimpossible\fP de concaténer les arguments courts ainsi : \fI-acd...\fP
+
+.IP \fB--\fP
+Met fin à la lecture des arguments et options.
+
+.IP \fB-A,\ --actions\fP\ \fIc\ d\ v\fP
+Activation des actions au démarrage (\fIcd\fP par défaut).
+.br
+Si l'action de la barre est visible, l'utilisateur peut la modifier.
+.br
+Liste des actions :
+.RS
+.RS
+\fIc\fP : Activer les effets
+.br
+\fId\fP : Activer le débogage
+.br
+\fIv\fP : Affichage en colonnes => Nécessite la commande \fBcolumn\fP
+.RE
+.RE
+
+.IP \fB-b,\ --bar\fP\ \fIh\ c\ v\ d\ l\ e\fP
+.br
+Gestion du contenu de la barre et de ses actions (\fIhcvdle\fP par défaut).
+.br
+L'ordre d'apparition des actions est respectée.
+.br
+Liste des actions :
+.RS
+.RS
+\fIh\fP (Help) : Aide
+.br
+\fIc\fP (Effects/Colors) : Activer effets / Désactiver effets
+.br
+\fIv\fP (View in columns): Voir en colonnes / Voir en ligne => Nécessite la commande \fBcolumn\fP.
+.br
+\fId\fP (Debug) : Activer le debogage / Désactiver le debogage
+.br
+\fIl\fP (Language) : Traduction anglaise
+.br
+\fIe\fP (Exit) : Quitter
+.RE
+Une valeur vide cachera la barre et inactivera ses actions.
+.RS
+ex : \fB--bar\fP "\fIqacq\fP"
+.RE
+.RE
+
+.IP \fB-c,\ --config\fP\ \fIfichier\fP
+Charge un fichier de config qui contient différentes valeurs.
+.br
+Si le fichier n'est pas précisé, \fI~/.config/HizoSelect/default.cfg\fP sera utilisé..
+.br
+Si le fichier n'existe pas, il est recherché dans \fI~/.config/HizoSelect\fP.
+
+.IP \fB-C,\ --clear\fP
+Nettoyer le terminal avant d'afficher les textes.
+
+.IP \fB-d,\ --default\fP\ \fIréponse(s)\fP
+.br
+Réponse pré-remplie (\fIvide\fP par défaut).
+.br
+Accepte les mêmes possibilités qu'une réponse manuelle et du texte à rechercher.
+.br
+Dans le cas de texte, il faut obligatoirement échapper les espaces.
+.br
+Toutes les propositions contenant le texte recherché seront repris.
+.br
+Pour séparer les valeurs, il suffit de les espacer.
+.RS
+.RS
+ex 1: \fB--default\fP "\fI1 2-5 ?\fP"
+.br
+ex 2: \fB--default\fP "\fI1 %t=bonjour\\ vous 5\fP"
+.br
+ex 3: \fB--default\fP "\fI1 2-5 ?\fP"
+.br
+ex 4: \fB--default\fP "\fI*\fP"
+.RE
+.RE
+
+.IP \fB-D,\ --delimiter\fP\ \fItexte\fP
+Délimiteur à utiliser entre les propositions retournées. (\fI\\n\fP par défaut).
+.RS
+.RS
+ex 1 : \fB--delimiter\fP "\fI|\fP"
+.br
+ex 2 : \fB--delimiter\fP "\fI@@@\fP"
+.RE
+.RE
+
+.IP \fB-e,\ --effects\fP\ \fI%[a-Z]\ %(ActKey|ActName|Error|Prompt|Title)\fP
+Cette option est à mettre au début de la liste des arguments.
+.br
+Effets à utiliser pour :
+.RS
+.RS
+\fI%[a-Z] (sauf %n)\fP : En fonction des lettres utilisées dans les propositions de réponses.
+.br
+\fI%ActKey\fP : Touches d'action (défaut : \\e[38;5;5m)
+.br
+\fI%ActName\fP : Descriptions des actions (défaut : \\e[38;5;4m)
+.br
+\fI%Error\fP : Erreurs (défaut : \\e[38;5;1m)
+.br
+\fI%n\fP : Numéros des réponses (défaut : \\e[38;5;5m)
+.br
+\fI%Prompt\fP : Message du prompt (défaut : \\e[38;5;6m)
+.br
+\fI%t\fP : Textes si aucune lettre n'est indiquée (défaut : \\e[38;5;4m)
+.br
+\fI%Title\fP : Titre (défaut : \\e[38;5;6m)
+.RE
+Les effets possibles sont :
+.RS
+\fI[0-255]\fP : Couleur du texte
+.br
+\fIbg[0-255]\fP : Couleur du fond
+.br
+\fIbold\fP : Gras
+.br
+\fIblink\fP : Clignoter
+.br
+\fIdim\fP : Demie intensité
+.br
+\fIsmul\fP : Souligner
+.br
+\fIsmso\fP : Inverser
+.RE
+Les effets sont cumulables en les séparant par un \fB/\fP.
+.br
+Pour détruire une couleur : \fB--effects\fP "\fI%t\fP="
+.RS
+ex : \fB--effects\fP "\fI%b\fP=4/bg9 \fI%t\fP=bold/smul/25 \fI%c\fP= \fI%Prompt\fP=bold/125"
+.RE
+.RE
+
+.IP \fB-E,\ --examples\fP
+Exemples d'utilisation.
+
+.IP \fB-f,\ --force\fP\ \fIréponse(s)\fP
+Réponses obligatoires (\fIvide\fP par défaut).
+.br
+Ces réponses ne peuvent être supprimées par l'utilisateur.
+.br
+Accepte les mêmes possibilités qu'une réponse manuelle et du texte à rechercher.
+.br
+Dans le cas de texte, il faut obligatoirement échapper les espaces.
+.br
+Toutes les propositions contenant le texte recherché seront repris.
+.br
+Pour séparer les valeurs, il suffit de les espacer.
+.br
+Si \fI--several\fP n'est pas utilisé, les réponses de \fI--force\fP ont la priorité sur celles de \fI--answers\fP.
+.RS
+.RS
+ex1 : \fB--force\fP "\fI1 2-5 ?\fP"
+.br
+ex2 : \fB--force\fP "\fI1 %t=bonjour\\ vous 5\fP"
+.RE
+.RE
+
+.IP \fB-h,\ -?,\ --help\fP
+Afficher une courte explication des arguments.
+
+.IP \fB-i,\ --input\fP\ \fIformat\fP
+Format d'affichage des propositions, le nombre (\fI%n\fP) est \fBobligatoire\fP (\fI%n) %t\fP par défaut).
+.br
+Voir le chapitre \fBFORMAT\fP pour plus d'informations sur le fonctionnement.
+.RS
+.RS
+ex : \fB--input\fP "\fI%n\fP => \fI%t\fP"
+.RE
+.RE
+
+.IP \fB--id, --input-delimiter\fP\ \fIcaractère\fP
+.br
+Le caractère à utiliser pour séparer les propositions en provenance de stdin (\f\\n\fP par défaut).
+.RS
+.RS
+ex : \fB--input-delimiter\fP "\fI@\fP"
+.br
+ex : \fB--input-delimiter\fP "\fI\\0\fP"
+.RE
+.RE
+
+.IP \fB-I,\ --info\fP\ \fItexte\fP
+Texte additionnel à afficher dans l'aide (\fIaucun\fP par défaut).
+.RS
+.RS
+ex : \fB--info\fP "Cette commande sert à..."
+.RE
+.RE
+
+.IP \fB-m,\ --min\fP\ \fIentier\fP
+Nombre minimal de réponse possible (\fIsans valeur\fP par défaut).
+.br
+La valeur doit être supérieure à 0.
+.br
+Sans le mode several, la valeur ne peut dépasser le nombre de proposition.
+.RS
+.RS
+ex 1 : \fB--min\fP "\fI2\fP"
+.br
+ex 2 : \fB--several --min\fP "\fI200\fP"
+.RE
+.RE
+
+.IP \fB-M,\ --max\fP\ \fIentier\fP
+.br
+Nombre maximal de réponse possible (\fIsans valeur\fP par défaut).
+.br
+La valeur doit être supérieure à 0.
+.br
+Cette option empêche l'utilisation de \fB*\fP si la valeur est inférieure au nombre de proposition.
+.br
+Sans le mode several, la valeur ne peut dépasser le nombre de proposition et la valeur de \fI--max\fP vaut le nombre de proposition.
+.RS
+.RS
+ex 1 : \fB--max\fP "\fI2\fP"
+.br
+ex 2 : \fB--several --max\fP "\fI200\fP"
+.RE
+.RE
+
+.IP \fB-n,\ --name\fP\ \fItexte\fP
+.br
+Nom de la commande affichée dans les messages d'erreur (\fIaucun\fP par défaut).
+.br
+Peut être utilise dans le cas d'enchaînement de questions pour déterminer lequel rencontre un problème.
+
+.IP \fB-o,\ --output\fP\ \fIformat\fP
+Format de sortie à utiliser (\fI%t\fP par défaut).
+.br
+Voir le chapitre \fBFORMAT\fP pour plus d'informations sur le fonctionnement.
+.RS
+.RS
+ex : \fB--output\fP "\fI%n\fP|\fI%t\fP"
+.RE
+.RE
+
+.IP \fB-p,\ --prompt\fP\ \fItexte\fP
+.br
+Texte à afficher lors de l'attente du choix (\fISélection :\fP par défaut).
+.RS
+.RS
+ex : \fB--prompt\fP "\fIMerci d'indiquer votre choix : \fP"
+.RE
+.RE
+
+.IP \fB-P,\ --proposals\fP\ \fI[0-3]\fP
+.br
+Provenance des propositions (\fI2\fP par défaut).
+.br
+Les valeurs possibles sont :
+.RS
+.RS
+\fI0\fP : Uniquement les propositions de la commande.
+.br
+\fI1\fP : Uniquement les propositions en provenance de stdin.
+.br
+\fI2\fP : Utiliser les propositions de la commande puis ceux de stdin.
+.br
+\fI3\fP : Utiliser les propositions de stdin puis ceux de la commande.
+.RE
+.RE
+
+.IP \fB-s,\ --several,\ --multi\fP
+.br
+Autorise de donner plusieurs fois la même réponse.
+.br
+Ce mode sera automatiquement activé si \fI--min\fP est supérieur au nombre de proposition.
+.br
+Ce mode sera automatiquement désactivé si \fI--min\fP vaut 1.
+
+.IP \fB-S,\ --symbols\fP\ \fIa\ r\ R\fP
+.br
+Active l'utilisation des symboles de réponse. (\fIarR\fP par défaut).
+.br
+Les valeurs possibles sont :
+.RS
+.RS
+\fIa\fP (All) : Utilisation de * pour renvoyer toutes les réponses.
+.RS
+Le mode \fBall\fP sera automatiquement désactivé si :
+.RS
+\fI--max\fP est inférieure au nombre de proposition.
+.br
+\fI--force\fP est utilisé et que \fI--several\fP ne l'est pas.
+.RE
+.RE
+.br
+\fIr\fP (Random) : Utilisation de ? pour renvoyer une réponse aléatoire.
+.br
+\fIR\fP (Range) : Utilisation de - pour renvoyer une plage de réponse : [1-9][0-9]-[1-9][0-9].
+.RS
+Le mode \fBrange\fP sera automatiquement désactivé si :
+.RS
+\fI--max\fP vaut 1.
+.RE
+.RE
+.RE
+.RE
+
+.IP \fB--sort\fP\ \fI%[a-Z]\fP
+Range les propositions de réponse dans l'ordre des arguments indiqués ici (sauf %n).
+.RS
+.RS
+ex : \fB--sort\fP "\fI%x %y\fP" "%t=bonjour %x=positif %y=soutenu" "%t=salut %x=positif %y=familier"
+.RE
+.RE
+
+.IP \fB-t,\ --text\fP\ \fItext\fP
+.br
+Affiche un texte entre le titre et la liste de proposition (\fIaucun\fP par défaut).
+.RS
+.RS
+ex : \fB--text\fP "\fILa 1ere réponse est :\fP"
+.RE
+.RE
+
+.IP \fB-T,\ --title\fP\ \fItexte\fP
+.br
+Premier texte affiché comme un titre (\fIvide\fP par défaut).
+.RS
+.RS
+ex : \fB--title\fP "\fIMerci de répondre à ce questionnaire :\fP"
+.RE
+.RE
+
+.IP \fB-u,\ --uniq-item\fP\ \fI%[a-Z]\fP
+.br
+Supprime les propositions de réponse en double en se basant sur l'argument indiqué (\fIvide\fP par défaut).
+.br
+Si l'argument n'est pas trouvé dans la proposition, elle n'est pas prise en compte.
+
+.IP \fB-v,\ --version\fP
+.br
+Version de la commande hizoselect.
+
+
+.SH PROPOSITIONS
+Les lettres variables utilisables sont libres, si aucune lettre n'est indiquée, la lettre \fI%t\fP sera utilisée par défaut pour les textes.
+.br
+Seule la variable \fI%n\fP n'est pas disponible car elle est automatiquement créée en interne.
+.br
+Ces variables seront disponibles pour le \fBFORMAT\fP de \fI--input\fP et \fI--output\fP mais aussi pour \fI--effects\fP et peut être utilisé avech \fI--default\fP ou \fI--force\fP.
+.br
+Il est préférable d'écrire les propositions en fin de commande et/ou depuis \fBstdin\fP.
+.br
+Les propositions en provenance de \fBstdin\fP doivent être séparées par des sauts de ligne.
+.br
+%default ajoutera la proposition aux réponses par défaut (comme l'option \fB--default\fP).
+.br
+%force ajoutera la proposition aux réponses obligatoires (comme l'option \fB--force\fP).
+
+.IP \fBUtilisation\ basique\ :
+.RS
+Indiquer tout simplement les textes à afficher :
+.RS
+\fBhizoselect\fP \\
+.RS
+"Proposition 1" \\
+.br
+"Proposition 2" \\
+.br
+"Proposition 3" \\
+.br
+ ...
+.RE
+.RE
+
+Aucune variable n'étant indiquée, \fI%t\fP sera utilisée, cela équivaut donc à écrire :
+.RS
+\fBhizoselect\fP \\
+.RS
+"\fI%t\fP=Proposition 1" \\
+.br
+"\fI%t\fP=Proposition 2" \\
+.br
+"\fI%t\fP=Proposition 3" \\
+.br
+ ...
+.RE
+.RE
+.RE
+
+.IP \fBUtilisation\ de\ variables\ personnalisées\ :
+.RS
+Pour l'exemple, on utilise %t pour le texte, %c pour un commentaire et %s pour un texte qui ne sera pas affiché.
+.br
+On aurait tout aussi bien pu les appeler x, y et z.
+.RS
+\fBhizoselect\fP \\
+.RS
+"\fI%t\fP=Proposition 1 \fI%c\fP=Commentaire 1 \fI%s\fP=Secret 1" \\
+.br
+"\fI%t\fP=Proposition 2 \fI%c\fP=Commentaire 2 \fI%s\fP=Secret 2" \\
+.br
+"\fI%t\fP=Proposition 3 \fI%c\fP=Commentaire 3 \fI%s\fP=Secret 3" \\
+.br
+ ...
+.RE
+.RE
+.RE
+
+
+.SH RÉPONSES
+Si la couleur est active, les réponses rentrées par l'utilisateur peuvent en avoir plusieurs :
+.RS
+Rouge : La réponse est obligatoire et ne peut être supprimée par l'utilisateur.
+.br
+Orange : La réponse n'est pas validée, plusieurs possibilités sont encore possibles.
+.br
+Verte : La réponse est validée.
+.br
+Bleue : Le nombre maximum de réponse a été atteint.
+.RE
+
+
+.SH FORMAT
+Explications des formats pour les arguments \fI--input\fP et \fI--output\fP.
+.br
+Les lettres variables sont libres, seule la lettre \fIn\fP est bloquée, elle sert à l'affichage des numéros.
+.br
+Pour utiliser les caractères \fB<\fP, \fB>\fP et \fB|\fP dans les formats, il faut les échapper avec \fB\\\fP.
+.br
+Format par défaut : \fI%n\fP) \fI%t\fP
+
+.IP \fBUtilisation\ basique\ :\fP\ \fI%n\fP)\ \fI%t\fP\ :\ \fI%c\fP.
+.RS
+Si \fI%n\fP, \fI%t\fP et \fI%c\fP existent, cela affichera : \fI%n\fP) \fI%t\fP : \fI%c\fP.
+.br
+Si \fI%c\fP n'existe pas, cela affichera : \fI%n\fP) \fI%t\fP : .
+.br
+Si \fI%t\fP n'existe pas, cela affichera : \fI%n\fP)  : \fI%c\fP.
+.RE
+
+.IP \fBUtilisation\ de\ variables\ facultatives\ :\fP\ \fI%n\fP)\ \fB<\fP\fI%t\fP\fB>\ <\fP:\ \fI%c\fP\fB>\fP.
+.RS
+Si \fI%t\fP et \fI%c\fP existent, cela affichera : \fI%n\fP) \fI%t\fP : \fI%c\fP.
+.br
+Si \fI%t\fP existe, cela affichera : \fI%n\fP) \fI%t\fP.
+.br
+Si \fI%c\fP existe, cela affichera : \fI%n\fP) : \fI%c\fP.
+.RE
+
+.IP \fBUtilisation\ de\ valeurs\ de\ secours\ :\fP\ \fI%n\fP)\ \fB<\fP\fI%t\fP\ :\ \fI%c\fP\fB|\fP\fI%t\fP\fB|\fP\fI%c\fP\fB|\fPAucune\ information\fB>\fP.
+.br
+L'ordre est important, les éléments sont lus les uns après les autres.
+.RS
+Si \fI%t\fP et \fI%c\fP existent, cela affichera : \fI%n\fP) \fI%t\fP : \fI%c\fP,
+.br
+Si \fI%t\fP existe, cela affichera : \fI%n\fP) \fI%t\fP
+.br
+Si \fI%c\fP existe, cela affichera : \fI%n\fP) \fI%c\fP.
+.br
+Si aucune des valeurs n'existe, cela affichera : \fI%n\fP) Aucune information.
+.RE
+.RE
+
+
+.SH INFOS
+.IP \fBFlux\ :\fP
+.br
+Les textes à récupérer sont envoyés sur \fBstdout\fP.
+.br
+Les textes à afficher sont envoyés sur \fBstderr\fP.
+
+.IP \fBRetour\ :\fP
+.br
+La commande renvoie un code d'erreur 1 si :
+.RS
+.RS
+Options et valeurs invalides.
+.br
+Utilisation de la touche pour quitter.
+.br
+Utilisation de la touche echap.
+.br
+Interruption du programme avec ctrl+c.
+.br
+Validation à vide.
+.RE
+.RE
+
+.IP \fBLangues\ :\fP
+.br
+La commande existe en français et en anglais.
+.br
+Elle utilise les fichiers \fBmo\fP et \fBgettext\fP (qui détermine la langue via différentes informations).
+.br
+Pour modifier la langue, il faut la préciser à la variable avant le lancement de la commande :
+.RS
+.RS
+Ex : \fBLANGUAGE\fP=\fIen\fP \fBhizoselect\fP ...
+.RE
+.RE
+
+.IP \fBCouleurs\ :\fP
+.br
+Informations sur le système des polices : https://misc.flogisoft.com/bash/tip_colors_and_formatting
+.br
+Pour visualiser les couleurs et leur numéros :
+.RS
+.RS
+\fBprintf\fP "\fI\\e[48;5;%dm%d \\e[0m\fP" {0..255}
+.RE
+.RE
+
+.IP \fBTextes\ interdits\ :\fP
+.br
+Merci de ne pas utiliser les textes suivants car ils servent en interne.
+.RS
+.RS
+@@@@@Hizo@@@@@
+.br
+#####Hizo#####
+.br
+&&&&&Hizo&&&&&
+.br
+¦¦¦¦¦Hizo¦¦¦¦¦
+.br
+-----Hizo-----
+.br
+_____Hizo_____
+.RE
+.RE
+
+.SH TOUCHES
+\fB[0-9]\fP (le premier chiffre ne peut être 0).
+.br
+\fB; , espace tab +\fP (qui sont lus comme des espaces).
+.br
+\fI[0-9]\fP\fB-\fP\fI[0-9]\fP pour sélectionner une plage. Le 2e nombre doit être supérieur au 1er. La plage démarre de la 1ere valeur à la 2e comprise.
+.br
+\fB*\fP pour sélectionner toutes les propositions.
+.br
+\fB?\fP pour sélectionner aléatoirement une proposition.
+.br
+\fBretour arrière\fP pour modifier ou supprimer la réponse précédente.
+.br
+\fBéchap\fP équivaut à la lettre de sortie \fBq\fP.
+.br
+\fBa\fP pour indiquer les options possibles.
+.br
+\fBc\fP pour activer/désactiver les effets de police.
+.br
+\fBv\fP pour activer/désactiver l'affichage en colonnes.
+.br
+\fBd\fP pour activer/désactiver l'affichage des erreurs.
+.br
+\fBl\fP pour changer de langue.
+.br
+\fBq\fP pour quitter le logiciel avec le code 1.
+.br
+\fBentrée\fP pour valider le choix.
+
+
+.SH EXEMPLES
+Pour voir des exemples de commande, utiliser la commande : \fBhizoselect\fP \fI--examples\fP
+.br
+Ex :
+.RS
+\fBhizoselect\fP \\
+.RS
+\fI--title\fP "Quelle était la couleur du cheval Blanc d'Henri IV ?" \\
+.br
+\fI--text\fP "Oui c'est une question bateau..." \\
+.br
+\fI--input\fP "%n) Son cheval était %t car %c." \\
+.br
+\fI--output\fP "%n|%t" \\
+.br
+\fI--max\fP "1" \\
+.br
+\fI--prompt\fP "Alors, quelle était sa couleur ? " \\
+.br
+\fI--effects\fP "%c=125" \\
+.br
+"\fI%t\fP=Blanc \fI%c\fP=la réponse est dans la question" \\
+.br
+"\fI%t\fP=Gris \fI%c\fP=Blanc était son nom, pas sa couleur" \\
+.br
+"\fI%t\fP=Mort \fI%c\fP=il n'en avait pas"
+.RE
+.RE
+
+
+.SH VOIR AUSSI
+Commande \fBselect\fP : https://www.gnu.org/software/bash/manual/bashref.html#Conditional-Constructs
+.br
+Commandes \fBgettext\fP, \fBcolumn\fP.
+
+
+.SH AUTEUR
+\fITerence Belléguic\fP aka \fIHizo\fP <hizo@free.fr> depuis \fI2017\fP.
+.br
+Merci aux gens qui m'ont aidé ainsi qu'aux forums \fIhttps://www.developpez.net\fP et \fIhttps://forum.ubuntu-fr.org\fP.

@@ -1,0 +1,575 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Belleguic terence <hizo@free.fr>
+# This file is distributed under the same license as the hizoselect package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: hizoselect\n"
+"Report-Msgid-Bugs-To: hizo@free.fr\n"
+"POT-Creation-Date: 2021-09-02 15:11+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#. TranslationAssistance ==============================> Texts of the errors
+#: functions/translation.sh:28
+msgid "The %s argument needs a value."
+msgstr ""
+
+#: functions/translation.sh:29
+msgid "The number %s is out of selection."
+msgstr ""
+
+#: functions/translation.sh:30
+msgid "%s: %s is not an accepted value."
+msgstr ""
+
+#: functions/translation.sh:31
+msgid "%s: %s is not in the proposals list."
+msgstr ""
+
+#: functions/translation.sh:32
+msgid "%s: The number of values is greater than the number of items."
+msgstr ""
+
+#: functions/translation.sh:33
+msgid "%s: Impossible to use %s because %s mode is disabled."
+msgstr ""
+
+#: functions/translation.sh:34
+msgid "%s: Impossible to associate * with another value."
+msgstr ""
+
+#: functions/translation.sh:35
+msgid ""
+"The effects are define by a number between 0 and 255 for effects or by bold "
+"dim smul smso."
+msgstr ""
+
+#: functions/translation.sh:36
+msgid "%s: file not founded."
+msgstr ""
+
+#: functions/translation.sh:37
+msgid "The input argument must have %%n."
+msgstr ""
+
+#: functions/translation.sh:38
+msgid "Insufficient number of items."
+msgstr ""
+
+#: functions/translation.sh:39
+msgid "%s key isn't usable."
+msgstr ""
+
+#: functions/translation.sh:40
+msgid "Maximum limit reached."
+msgstr ""
+
+#: functions/translation.sh:41
+msgid "Number of answer insufficient."
+msgstr ""
+
+#: functions/translation.sh:42
+msgid "The --min value cannot be greater than the --max value."
+msgstr ""
+
+#: functions/translation.sh:43
+msgid "%s: - needs a MIN value before and a MAX value after."
+msgstr ""
+
+#: functions/translation.sh:44
+msgid "The second number must be greater than the first."
+msgstr ""
+
+#: functions/translation.sh:45
+msgid "The range needs a second number."
+msgstr ""
+
+#: functions/translation.sh:46
+msgid "The range will exceed the maximum answer number."
+msgstr ""
+
+#: functions/translation.sh:47
+msgid "A number must precede the - sign."
+msgstr ""
+
+#: functions/translation.sh:48
+msgid "Impossible to add more - signs."
+msgstr ""
+
+#: functions/translation.sh:49
+msgid "This value range will unnecessarily duplicate."
+msgstr ""
+
+#: functions/translation.sh:50
+msgid "The %s argument is unknow."
+msgstr ""
+
+#: functions/translation.sh:51
+msgid "%s number already entered."
+msgstr ""
+
+#: functions/translation.sh:52
+msgid "Please explain to hizo@free.fr how this error happened."
+msgstr ""
+
+#: functions/translation.sh:53
+msgid "%s: A number cannot start by 0."
+msgstr ""
+
+#. TranslationAssistance ==============================> Texts
+#: functions/translation.sh:56
+msgid "Selection: "
+msgstr ""
+
+#: functions/translation.sh:57
+msgid "One expected answer"
+msgid_plural "%d expected answers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions/translation.sh:58
+msgid "Between %s and %s expected answers"
+msgstr ""
+
+#: functions/translation.sh:59
+msgid "Minimum of %d expected answer"
+msgid_plural "Minimum of %d expected answers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions/translation.sh:60
+msgid "Maximum of %d expected answer"
+msgid_plural "Maximum of %d expected answers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: functions/translation.sh:61
+msgid "Answer"
+msgstr ""
+
+#. TranslationAssistance ==============================> Texts of the dynamic help
+#: functions/translation.sh:65
+msgid "Help with the use of HizoSelect"
+msgstr ""
+
+#: functions/translation.sh:66
+msgid "Number of expected answers:"
+msgstr ""
+
+#: functions/translation.sh:67
+msgid "Possible answers:"
+msgstr ""
+
+#: functions/translation.sh:68
+msgid "The numbers select their items."
+msgstr ""
+
+#: functions/translation.sh:69
+msgid "The ? select random items."
+msgstr ""
+
+#: functions/translation.sh:70
+msgid ""
+"The range select items starts from the first number to the second number "
+"included."
+msgstr ""
+
+#: functions/translation.sh:71
+msgid "The * select all items."
+msgstr ""
+
+#: functions/translation.sh:72
+msgid "Press any key for exiting the help."
+msgstr ""
+
+#: functions/translation.sh:73
+msgid "It's possible to select several times a same item."
+msgstr ""
+
+#: functions/translation.sh:74
+msgid "Each item can be only select one time."
+msgstr ""
+
+#: functions/translation.sh:75
+msgid "Information:"
+msgstr ""
+
+#. TranslationAssistance ==============================> Texts of the help argument
+#: functions/translation.sh:79
+msgid "Options:"
+msgstr ""
+
+#: functions/translation.sh:80
+msgid ""
+"Effects of actions, commentaries, errors, numbers, prompt text, secret "
+"texts, texts and title."
+msgstr ""
+
+#: functions/translation.sh:81
+msgid ""
+"Enabled actions on start. If the action is visible in the bar, the user can "
+"change it."
+msgstr ""
+
+#: functions/translation.sh:82
+msgid "Hides error messages."
+msgstr ""
+
+#: functions/translation.sh:83
+msgid "Pre-filled answers."
+msgstr ""
+
+#: functions/translation.sh:84
+msgid "Demonstration of commands."
+msgstr ""
+
+#: functions/translation.sh:85
+msgid "Displays this help."
+msgstr ""
+
+#: functions/translation.sh:86
+msgid "Mandatory answers."
+msgstr ""
+
+#: functions/translation.sh:87
+msgid "Format of the items."
+msgstr ""
+
+#: functions/translation.sh:88
+msgid "Maximal number of answers."
+msgstr ""
+
+#: functions/translation.sh:89
+msgid "Minimal number of answers."
+msgstr ""
+
+#: functions/translation.sh:90
+msgid "Allows to return the same answer several times."
+msgstr ""
+
+#: functions/translation.sh:91
+msgid "Enables the use of symbols in the answers."
+msgstr ""
+
+#: functions/translation.sh:92
+msgid "Displayed text between the title and the list of items."
+msgstr ""
+
+#: functions/translation.sh:93
+msgid "Sort the proposals by the choiced argument."
+msgstr ""
+
+#: functions/translation.sh:94
+msgid "Format of the returned answers."
+msgstr ""
+
+#: functions/translation.sh:95
+msgid "Displayed text while waiting for the choice."
+msgstr ""
+
+#: functions/translation.sh:96
+msgid "First displayed text like a title."
+msgstr ""
+
+#: functions/translation.sh:97
+msgid "Delete redundant items by the choiced argument."
+msgstr ""
+
+#: functions/translation.sh:98
+msgid "Version of the hizoselect command."
+msgstr ""
+
+#: functions/translation.sh:99
+msgid "Examples:"
+msgstr ""
+
+#: functions/translation.sh:100
+msgid "More informations:"
+msgstr ""
+
+#: functions/translation.sh:101
+msgid "item(s)     "
+msgstr ""
+
+#: functions/translation.sh:102
+msgid "int   "
+msgstr ""
+
+#: functions/translation.sh:103
+msgid "text "
+msgstr ""
+
+#: functions/translation.sh:104
+msgid "Management of the content of the bar and its actions."
+msgstr ""
+
+#: functions/translation.sh:105
+msgid "Origin of the proposals, command AND/OR stdin."
+msgstr ""
+
+#: functions/translation.sh:106
+msgid "Delimiter to use between of the returned items."
+msgstr ""
+
+#: functions/translation.sh:107
+msgid "Text to add in the help screen."
+msgstr ""
+
+#: functions/translation.sh:108
+msgid "HizoSelect command help"
+msgstr ""
+
+#: functions/translation.sh:109
+msgid "Name of the command displayed in error messages."
+msgstr ""
+
+#: functions/translation.sh:110
+msgid "Clear the terminal before display the texts."
+msgstr ""
+
+#: functions/translation.sh:111
+msgid "file"
+msgstr ""
+
+#: functions/translation.sh:112
+msgid "Load a config file who contains some values."
+msgstr ""
+
+#: functions/translation.sh:113
+msgid "Delimiter between the proposals from stdin"
+msgstr ""
+
+#. TranslationAssistance ==============================> Texts of the examples
+#: functions/translation.sh:117
+msgid "What example(s) do you want see?"
+msgstr ""
+
+#: functions/translation.sh:118
+msgid ""
+"%t=Would you marry me? %c=One number by default with a limit to 1 item and "
+"output change"
+msgstr ""
+
+#: functions/translation.sh:119
+msgid ""
+"%t=Choose your menu %c=All by default with a input number for read command"
+msgstr ""
+
+#: functions/translation.sh:120
+msgid ""
+"%t=Write the name 'Belleguic' %c=Numbers by default with columns format and "
+"several mode enable"
+msgstr ""
+
+#: functions/translation.sh:121
+msgid ""
+"%t=What can be the age of a minor? %c=Range by default with no-all and no-"
+"random"
+msgstr ""
+
+#: functions/translation.sh:122
+msgid ""
+"%t=I remove duplicates for you %c=Uniq item option and prompt text change"
+msgstr ""
+
+#: functions/translation.sh:123
+msgid "%t=Advanced input/output argument %c=How-to use format"
+msgstr ""
+
+#: functions/translation.sh:124
+msgid "%t=Traitment of files in a for loop %c=How-to use returns with for loop"
+msgstr ""
+
+#: functions/translation.sh:125
+msgid "%t=Use multi read %c=How-to use multi while read loop"
+msgstr ""
+
+#: functions/translation.sh:126
+msgid "Command:"
+msgstr ""
+
+#: functions/translation.sh:127
+msgid "Would you marry me?"
+msgstr ""
+
+#: functions/translation.sh:128
+msgid "The number %n is %t (%c) and his secret value is %s."
+msgstr ""
+
+#: functions/translation.sh:129
+msgid "%t=Yes %c=I want it! %s=y"
+msgstr ""
+
+#: functions/translation.sh:130
+msgid "%t=No %c=Sorry... %s=n"
+msgstr ""
+
+#: functions/translation.sh:131
+msgid "I want eat a %t"
+msgstr ""
+
+#: functions/translation.sh:132
+msgid "Choose your menu (All by default):"
+msgstr ""
+
+#: functions/translation.sh:133
+msgid "%t=Entry %c=Vegetables"
+msgstr ""
+
+#: functions/translation.sh:134
+msgid "%t=Dish %c=Steak and fries"
+msgstr ""
+
+#: functions/translation.sh:135
+msgid "%t=Dessert %c=Flan"
+msgstr ""
+
+#: functions/translation.sh:136
+msgid "Write the name 'Belleguic' (Numbers by default)"
+msgstr ""
+
+#: functions/translation.sh:137
+msgid "You write:"
+msgstr ""
+
+#: functions/translation.sh:138
+msgid "What can be the age of a minor?"
+msgstr ""
+
+#: functions/translation.sh:139
+msgid "A minor may be aged: %s years"
+msgstr ""
+
+#: functions/translation.sh:140
+msgid "I remove duplicates for you:"
+msgstr ""
+
+#: functions/translation.sh:141
+msgid "You have choiced: %t"
+msgstr ""
+
+#: functions/translation.sh:142
+msgid "I wait after you:"
+msgstr ""
+
+#: functions/translation.sh:143
+msgid "Advanced input/output argument:"
+msgstr ""
+
+#: functions/translation.sh:144
+msgid ""
+"[%n] (mandatory) <%t and %c and %s (text and commentary and secret text)|%t "
+"and %c (text and commentary)|%t and %s (text and secret text)|%c and %s "
+"(commentary and secret text)|%t (text)|%c (commentary)|%s (secret text)>"
+msgstr ""
+
+#: functions/translation.sh:145
+msgid ""
+"\\<%n\\> (always exists) \\| <%t and %c and %s (text and commentary and "
+"secret text)|%t and %c (text and commentary)|%t and %s (text and secret "
+"text)|%c and %s (commentary and secret text)|%t (text)|%c (commentary)|%s "
+"(secret text)>"
+msgstr ""
+
+#: functions/translation.sh:146
+msgid "Select the files to update"
+msgstr ""
+
+#: functions/translation.sh:147
+msgid "I choosen %s."
+msgstr ""
+
+#: functions/translation.sh:148
+msgid "%t=Select software to install %c=Use the secret text"
+msgstr ""
+
+#: functions/translation.sh:149
+msgid "%t=Select women as you know %c=Create an array indexed"
+msgstr ""
+
+#: functions/translation.sh:150
+msgid "Select software to install"
+msgstr ""
+
+#: functions/translation.sh:151
+msgid "Select women as you know"
+msgstr ""
+
+#. TranslationAssistance ==============================> h letter for help
+#: functions/translation.sh:155
+msgid "h"
+msgstr ""
+
+#: functions/translation.sh:156
+msgid "Help"
+msgstr ""
+
+#. TranslationAssistance ==============================> c letter for effects
+#: functions/translation.sh:158
+msgid "c"
+msgstr ""
+
+#: functions/translation.sh:159
+msgid "Enable effects"
+msgstr ""
+
+#: functions/translation.sh:160
+msgid "Disable effects"
+msgstr ""
+
+#. TranslationAssistance ==============================> v letter for view
+#: functions/translation.sh:162
+msgid "v"
+msgstr ""
+
+#: functions/translation.sh:163
+msgid "View in columns"
+msgstr ""
+
+#: functions/translation.sh:164
+msgid "View in lines"
+msgstr ""
+
+#. TranslationAssistance ==============================> d letter for debug
+#: functions/translation.sh:166
+msgid "d"
+msgstr ""
+
+#: functions/translation.sh:167
+msgid "Enable debug"
+msgstr ""
+
+#: functions/translation.sh:168
+msgid "Disable debug"
+msgstr ""
+
+#. TranslationAssistance ==============================> l letter for lang
+#: functions/translation.sh:170
+msgid "l"
+msgstr ""
+
+#: functions/translation.sh:171
+msgid "French translation"
+msgstr ""
+
+#: functions/translation.sh:172
+msgid "English translation"
+msgstr ""
+
+#. TranslationAssistance ==============================> e letter for exit
+#: functions/translation.sh:174
+msgid "e"
+msgstr ""
+
+#: functions/translation.sh:175
+msgid "Exit"
+msgstr ""
